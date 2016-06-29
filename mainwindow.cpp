@@ -37,13 +37,17 @@ void MainWindow::start()
 
     //start simulation
     //pass input to the simulation thread
+    cout << "thread 1" << endl;
     simulation = new Simulation(input);
     thread = new QThread();
     simulation->moveToThread(thread);
 
+    cout << "thread 2" << endl;
+
     connectSignalSlot();
 
     thread->start();
+    cout << "thread 3" << endl;
 
 }
 
@@ -69,8 +73,10 @@ void MainWindow::render()
 //set running flag to false
 void MainWindow::stop()
 {
-    cout << "main stop" << endl;
+    //thread->terminate();
+
     is_running = false;
+
     lbl_status->setText("Stopped. Click Play to start simulation.");
 }
 

@@ -1,0 +1,7 @@
+#ifndef ALG
+#define ALG
+
+enum ALG_VARIANT {DIRECT_RANGE_ASSIGN, NORMAL_INTERPOLATION, VORONOI};
+
+#endif // ALG
+

@@ -4,6 +4,7 @@
 #include "inputwidget.h"
 #include "tools.h"
 #include "algorithm.h"
+#include "algbroadcastdirect.h"
 
 InputWidget::InputWidget(QWidget* parent) : QWidget(parent)
 {
@@ -36,6 +37,9 @@ void InputWidget::createInput(Input& input)
     }
 
     input.setSource(Tools::randomnum(0, input.nodes.size()));
+
+    //add algorithms
+    //input.algos.push_back(new Al);
 }
 
 void InputWidget::createUI()

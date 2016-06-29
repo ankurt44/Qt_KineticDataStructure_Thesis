@@ -2,10 +2,23 @@
 #define NODE
 
 #include <cmath>
+#include <map>
 
 #include "vector2f.h"
 #include "voronoicell.h"
 #include "tools.h"
+#include "alg.h"
+
+/*
+struct EnumClassHash
+{
+    template <typename T>
+    std::size_t operator()(T t) const
+    {
+        return static_cast<std::size_t>(t);
+    }
+};
+*/
 
 class Node
 {
@@ -18,49 +31,31 @@ public:
     VoronoiCell cell;
     float velocity;
 
+
     Node() = default;
 
-    Node(const Vector2f& _pos, float _velocity = 0.0f, float _range = 0.0f)
-    {
-        pos = _pos;
-        velocity= _velocity;
-        range = _range;
-        cell = VoronoiCell();
-    }
+    Node(const Vector2f& _pos, float _velocity = 0.0f, float _range = 0.0f);
 
-    Node(const Node& node)
-    {
-        pos = node.pos;
-        velocity = node.velocity;
-        range = node.range;
-        cell = node.cell;
-    }
+    Node(const Node& node);
 
-    float getRange()
-    {
-        updateRange();
-        return range;
-    }
+    float getRange();
 
-    void updateRange()
-    {
-        range = 0;
-        for(Node* n : children)
-        {
-            float dist = Tools::distance(this->pos, n->pos);
-            if(dist > range)
-                    range = dist;
-        }
-    }
+    const Node* getFarChild();
 
-    double getEnergy()
-    {
-        return C*pow(range, FACTOR);
-    }
+    double getEnergy();
+
+    void addInterpolation(ALG_VARIANT _alg, vector<pair<float, float> > _i);
+
+    //ToDo: linear interpolation. can allow someone to pass interpolation function pointer as argument
+    //                                  (default could be a function that does linear interpolation)
+    float getRangeAt(ALG_VARIANT _alg, float _time);
 
 private:
     //force to call getRange, and update range as per farthest child
     float range;
+
+    //variant to <time, range>
+    map<ALG_VARIANT, vector<pair<float, float> > > interpolation;
 
 };
 

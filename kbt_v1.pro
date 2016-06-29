@@ -17,7 +17,9 @@ SOURCES += main.cpp\
     renderarea.cpp \
     inputwidget.cpp \
     tools.cpp \
-    simulation.cpp
+    simulation.cpp \
+    algbroadcastdirect.cpp \
+    node.cpp
 
 HEADERS  += mainwindow.h \
     vector2f.h \
@@ -29,6 +31,9 @@ HEADERS  += mainwindow.h \
     renderarea.h \
     inputwidget.h \
     simulation.h \
-    constants.h
+    constants.h \
+    algmodel.h \
+    algbroadcastdirect.h \
+    alg.h
 
 FORMS    += mainwindow.ui

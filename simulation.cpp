@@ -53,11 +53,13 @@ void Simulation::start()
             }
 
             emit render();
+
             QThread::msleep(1000);
-            qApp->processEvents();
 
             prev_time = new_time;
         }
+        //ToDo : if "stop" pressed -> stops after current interval is processed
+        qApp->processEvents();
 
         if(!is_running)
             break;

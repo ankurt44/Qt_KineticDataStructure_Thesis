@@ -2,6 +2,7 @@
 #define INPUT
 
 #include "node.h"
+#include "algmodel.h"
 
 /*
  * Time in milliseconds
@@ -11,6 +12,11 @@ class Input
 public:
     vector<Node> nodes;
     float interval_length;
+    //ToDo : register movement model
+
+    //ToDo : register algorithms
+    vector<AlgModel*> algos;
+
 
     Input(float _interval_length = 5000)
     {
@@ -37,9 +43,7 @@ public:
         return &nodes[source];
     }
 
-    //ToDo : register movement model
 
-    //ToDo : register algorithms
 
     int getSourceIndex()
     {
