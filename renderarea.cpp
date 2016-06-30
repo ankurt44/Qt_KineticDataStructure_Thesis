@@ -56,8 +56,10 @@ void RenderArea::paintNode(QPainter *painter, QPaintEvent *event, Node& node)
     painter->setPen(QPen(QBrush(Qt::green), 2));
     painter->setBrush(Qt::NoBrush);
     int  range = node.getRange();
-    //painter->drawEllipse(QPoint(node.pos.x, node.pos.y), range, range); //ToDo : center and radius are not accurate (not in float)
+    painter->drawEllipse(QPoint(node.pos.x, node.pos.y), range, range); //ToDo : center and radius are not accurate (not in float)
 
+    painter->setPen(QPen(QBrush(Qt::blue), 2));
+    painter->setBrush(Qt::NoBrush);
     for(Node* n: node.children)
         painter->drawLine(node.pos.x, node.pos.y, n->pos.x, n->pos.y);
 

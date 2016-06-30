@@ -36,10 +36,10 @@ void InputWidget::createInput(Input& input)
         //TODO : check if a node is created with same x and y
     }
 
-    input.setSource(Tools::randomnum(0, input.nodes.size()));
+    input.setSource(Tools::randomnum(0, input.nodes.size()-1));
 
     //add algorithms
-    //input.algos.push_back(new Al);
+    input.algos.push_back(new AlgBroadcastDirect);
 }
 
 void InputWidget::createUI()

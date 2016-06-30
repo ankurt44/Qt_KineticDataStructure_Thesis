@@ -50,6 +50,8 @@ public:
     //                                  (default could be a function that does linear interpolation)
     float getRangeAt(ALG_VARIANT _alg, float _time);
 
+    float updateRangeAt(ALG_VARIANT _alg, float _time);
+
 private:
     //force to call getRange, and update range as per farthest child
     float range;

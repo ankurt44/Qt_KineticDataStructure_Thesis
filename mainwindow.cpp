@@ -42,12 +42,9 @@ void MainWindow::start()
     thread = new QThread();
     simulation->moveToThread(thread);
 
-    cout << "thread 2" << endl;
-
     connectSignalSlot();
 
     thread->start();
-    cout << "thread 3" << endl;
 
 }
 

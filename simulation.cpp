@@ -31,6 +31,7 @@ void Simulation::start()
         double prev_time = timer_sim->elapsed();
         double new_time = timer_sim->elapsed();
         double diff_time = 0.0;
+        double past_interval = 0.0;
 
         //1. the positions were latest updated at time 'new_time'
         //get positions at start of interval, then apply algorithms
@@ -40,21 +41,30 @@ void Simulation::start()
 
         Algorithm::broadcastTree(input->nodes, input->getSourceIndex());
 
+
+        for(AlgModel* alg : input->algos)
+        {
+            alg->execute(input->nodes, 0.0, input->interval_length);
+        }
+
+
         //2.advance state of nodes by 'interval_exceeded' time
 
         while(interval - timer_interval->elapsed() - interval_exceeded > 0) //runs for given time interval
         {
             new_time =  timer_sim->elapsed();
             diff_time = (new_time - prev_time) / 1000;
+            past_interval += diff_time;
 
             for(Node& n : input->nodes)
             {
-                Tools::nextRandomPosition(n.pos, n.velocity, diff_time);
+                Tools::nextRandomPosition(n.pos, n.velocity, diff_time, 0, 360);
+                n.updateRangeAt(DIRECT_RANGE_ASSIGN, past_interval);
             }
 
             emit render();
 
-            QThread::msleep(1000);
+            QThread::msleep(500);
 
             prev_time = new_time;
         }

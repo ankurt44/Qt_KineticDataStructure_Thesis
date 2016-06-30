@@ -19,10 +19,10 @@ double Tools::randomnum(double min, double max)
     return min + r;
 }
 
-void Tools::nextRandomPosition(Vector2f& curr_pos, double speed, double dt)
+void Tools::nextRandomPosition(Vector2f& curr_pos, double speed, double dt, float min_arc_ang, float max_arc_ang)
 {
     double disp = speed * dt;
-    double ang = Tools::randomnum(0, 360);
+    double ang = Tools::randomnum(min_arc_ang, max_arc_ang);
     double ang_rad = ang * 2 * PI / 360;
 
     double disp_x_max = disp * (double) cos(ang_rad);

@@ -25,6 +25,11 @@ struct NextEventComparator
 
 void Algorithm::broadcastTree(vector<Node>& nodes, int source)
 {
+
+    //clear nodes children
+    for(Node& n: nodes)
+        n.children.clear();
+
     map< int,  vector<int> > edges;
     //edge_wt.push_back(std::make_pair(std::make_pair(10, 20), 30));
 
