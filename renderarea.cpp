@@ -1,7 +1,7 @@
 #include <QPushButton>
 
 #include "renderarea.h"
-#include "algorithm.h"
+#include "algvoronoi.h"
 
 
 RenderArea::RenderArea(QWidget* parent)
@@ -70,10 +70,10 @@ void RenderArea::testPaint(QPainter* painter, QPaintEvent *event)
     //painter->drawPoint(node.pos.x, node.pos.y);
     //painter->drawLine(node.x, node.y, 200, 200);
 
-    Node node1(Vector2f(200, 200));
+    Node node1(Vector2f(10, 200));
     Node node2(Vector2f(300, 300));
     Node node3(Vector2f(600, 400));
-    Node node4(Vector2f(950, 500));
+    Node node4(Vector2f(950, 250));
     Node node14(Vector2f(150, 670));
     Node node5(Vector2f(50, 50));
     Node node6(Vector2f(300, 200));
@@ -94,7 +94,7 @@ void RenderArea::testPaint(QPainter* painter, QPaintEvent *event)
     nodes.push_back(node10);
     nodes.push_back(node14);
 
-    Algorithm::voronoiDiagram(nodes);
+    AlgVoronoi::voronoiDiagram(nodes);
 
     painter->setPen(QPen(QBrush(Qt::red), 4));
     painter->setBrush(QBrush(Qt::red));

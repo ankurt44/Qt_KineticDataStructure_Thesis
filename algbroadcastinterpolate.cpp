@@ -1,14 +1,14 @@
 #include <map>
 
-#include "algbroadcastdirect.h"
+#include "algbroadcastinterpolate.h"
 #include "node.h"
 
-AlgBroadcastDirect::AlgBroadcastDirect()
+AlgBroadcastInterpolate::AlgBroadcastInterpolate()
 {
-    alg = DIRECT_RANGE_ASSIGN;
+    alg = NORMAL_INTERPOLATION;
 }
 
-void AlgBroadcastDirect::execute(vector<Node>& nodes, float m_interval_start, float m_interval_end)
+void AlgBroadcastInterpolate::execute(vector<Node>& nodes, float m_interval_start, float m_interval_end)
 {
     vector<pair<float, float> > i;
 

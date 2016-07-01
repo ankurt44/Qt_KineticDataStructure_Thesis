@@ -28,8 +28,10 @@ public:
 
     Vector2f pos;
     vector<Node*> children;
+    //vector<Node*> children;
     VoronoiCell cell;
     float velocity;
+    int order;
 
 
     Node() = default;

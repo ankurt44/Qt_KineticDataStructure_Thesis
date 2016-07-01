@@ -18,8 +18,10 @@ SOURCES += main.cpp\
     inputwidget.cpp \
     tools.cpp \
     simulation.cpp \
+    node.cpp \
+    algbroadcastinterpolate.cpp \
     algbroadcastdirect.cpp \
-    node.cpp
+    algvoronoi.cpp
 
 HEADERS  += mainwindow.h \
     vector2f.h \
@@ -33,7 +35,9 @@ HEADERS  += mainwindow.h \
     simulation.h \
     constants.h \
     algmodel.h \
+    alg.h \
+    algbroadcastinterpolate.h \
     algbroadcastdirect.h \
-    alg.h
+    algvoronoi.h
 
 FORMS    += mainwindow.ui

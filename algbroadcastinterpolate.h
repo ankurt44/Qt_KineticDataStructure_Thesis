@@ -3,11 +3,11 @@
 
 #include "algmodel.h"
 
-class AlgBroadcastDirect : public AlgModel
+class AlgBroadcastInterpolate : public AlgModel
 {
 public:
 
-    AlgBroadcastDirect();
+    AlgBroadcastInterpolate();
 
     virtual void execute(vector<Node>& nodes, float m_interval_start, float m_interval_end) override;
 };

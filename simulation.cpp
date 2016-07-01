@@ -8,7 +8,6 @@
 Simulation::Simulation(Input* input) : input(input)
 {
     is_running = false;
-    //this->input = input;
 }
 
 void Simulation::start()
@@ -41,6 +40,7 @@ void Simulation::start()
 
         Algorithm::broadcastTree(input->nodes, input->getSourceIndex());
 
+        Algorithm::orderAsDepth(input->nodes, input->getSourceIndex());
 
         for(AlgModel* alg : input->algos)
         {
@@ -59,7 +59,10 @@ void Simulation::start()
             for(Node& n : input->nodes)
             {
                 Tools::nextRandomPosition(n.pos, n.velocity, diff_time, 0, 360);
-                n.updateRangeAt(DIRECT_RANGE_ASSIGN, past_interval);
+                for(AlgModel* alg : input->algos)
+                {
+                    n.updateRangeAt(alg->alg, past_interval);
+                }
             }
 
             emit render();
