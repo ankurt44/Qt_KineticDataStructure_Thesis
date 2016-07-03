@@ -6,7 +6,7 @@
 
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
 TARGET = kbt_v1
 TEMPLATE = app
@@ -21,7 +21,10 @@ SOURCES += main.cpp\
     node.cpp \
     algbroadcastinterpolate.cpp \
     algbroadcastdirect.cpp \
-    algvoronoi.cpp
+    algvoronoi.cpp \
+    graphwindow.cpp \
+    qcustomplot.cpp \
+    graphcomponent.cpp
 
 HEADERS  += mainwindow.h \
     vector2f.h \
@@ -38,6 +41,9 @@ HEADERS  += mainwindow.h \
     alg.h \
     algbroadcastinterpolate.h \
     algbroadcastdirect.h \
-    algvoronoi.h
+    algvoronoi.h \
+    graphwindow.h \
+    qcustomplot.h \
+    graphcomponent.h
 
 FORMS    += mainwindow.ui

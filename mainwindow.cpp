@@ -3,6 +3,7 @@
 #include "mainwindow.h"
 #include "constants.h"
 #include "ui_mainwindow.h"
+#include "graphwindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -14,6 +15,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     createUI();
     appearance();
+
+    //ToDo : set initial state of controls..Eg disable graphs, stop buttons
 
     connect(btn_play, SIGNAL(clicked(bool)), this, SLOT(start()));
 }
@@ -38,13 +41,15 @@ void MainWindow::start()
     //start simulation
     //pass input to the simulation thread
     cout << "thread 1" << endl;
-    simulation = new Simulation(input);
+    simulation = new Simulation(input, graph_win);
     thread = new QThread();
     simulation->moveToThread(thread);
 
     connectSignalSlot();
 
     thread->start();
+
+    //ToDo : enable and disable controls
 
 }
 
@@ -59,6 +64,9 @@ void MainWindow::connectSignalSlot()
     connect(simulation, SIGNAL(finished()), this, SLOT(stop()));
     //simulation should wait until rendering is completed : Qt::BlockingQueuedConnection
     connect(simulation, SIGNAL(render()), this, SLOT(render()), Qt::BlockingQueuedConnection);
+
+    connect(btn_open_graph, SIGNAL(clicked(bool)), this, SLOT(openGraphWin()));
+    connect(this, SIGNAL(startDrawing()), simulation, SLOT(startDrawing()));
 }
 
 //ask render widget to render simulation state
@@ -75,6 +83,15 @@ void MainWindow::stop()
     is_running = false;
 
     lbl_status->setText("Stopped. Click Play to start simulation.");
+
+    //ToDo : set controls state to initial state -- disable and enable controls
+}
+
+void MainWindow::openGraphWin()
+{
+    graph_win->show();
+
+    emit startDrawing();
 }
 
 MainWindow::~MainWindow()
@@ -88,22 +105,33 @@ void MainWindow::createUI()
     QGridLayout* g_layout = new QGridLayout;
     central_widget->setLayout(g_layout);
 
-    //initialize component components
+    //initialize components
     render_area = new RenderArea(this);
     render_area->setFixedSize(WIDTH - 2 * MARGIN, HEIGHT - 2 * MARGIN);
     input_widget = new InputWidget();
+
+    //initialize controls
+    controls_layout = new QHBoxLayout;
     btn_play = new QPushButton("Play");
+    btn_open_graph = new QPushButton("Graphs");
     btn_stop = new QPushButton("Stop");
     lbl_status = new QLabel("Click Play to run");
+    //lbl_status->setFixedWidth(300);
+    controls_layout->addWidget(btn_play);
+    controls_layout->addWidget(btn_open_graph);
+    controls_layout->addWidget(btn_stop);
+    controls_layout->addWidget(lbl_status);
+    h_group_box = new QGroupBox;
+    h_group_box->setLayout(controls_layout);
+
     //add components to layout
     g_layout->addWidget(render_area, 0, 0, Qt::AlignCenter);
     g_layout->addWidget(input_widget, 1, 0, Qt::AlignLeft);
-    g_layout->addWidget(btn_play, 2, 0, Qt::AlignLeft);
-    g_layout->addWidget(btn_stop, 2, 0, Qt::AlignRight);
-    g_layout->addWidget(lbl_status, 2, 0, Qt::AlignCenter);
-
+    g_layout->addWidget(h_group_box, 2, 0, Qt::AlignLeft);
 
     this->setCentralWidget(central_widget);
+
+    graph_win = new GraphWindow;
 }
 
 void MainWindow::appearance()

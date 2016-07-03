@@ -65,7 +65,6 @@ float Node::getRangeAt(ALG_VARIANT _alg, float _time)
     else
         assert(i[0].first <= _time && _time <= i[i.size()-1].first && "=>assert to check if argument falls within interval");
 
-    cout << "in node class, the time passed :" << _time << endl;
     for(int j = 0; j < i.size()-1; j++)
     {
         if(i[j].first <= _time && _time <= i[j+1].first)
@@ -79,6 +78,5 @@ float Node::updateRangeAt(ALG_VARIANT _alg, float _time)
 {
     //ToDo :: create a list for each algorithm and add ranges at times to the list also,
     range = getRangeAt(_alg, _time);
-    cout << "time" << _time << " and range " << range << endl;
     return range;
 }

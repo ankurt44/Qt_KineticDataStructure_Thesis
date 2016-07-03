@@ -5,6 +5,8 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QThread>
+#include <QHBoxLayout>
+#include <QGroupBox>
 
 #include "renderarea.h"
 #include "inputwidget.h"
@@ -27,6 +29,10 @@ public slots:
     void start();
     void stop();
     void render();
+    void openGraphWin();
+
+signals:
+    void startDrawing();
 
 private:
     Ui::MainWindow *ui;
@@ -37,7 +43,13 @@ private:
 
     RenderArea* render_area;
     InputWidget* input_widget;
+
+    GraphWindow* graph_win;
+
+    QGroupBox* h_group_box;
+    QHBoxLayout* controls_layout;
     QPushButton* btn_play;
+    QPushButton* btn_open_graph;
     QPushButton* btn_stop;
     QLabel* lbl_status;
 

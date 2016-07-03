@@ -5,9 +5,19 @@
 #include "simulation.h"
 #include "algorithm.h"
 
-Simulation::Simulation(Input* input) : input(input)
+Simulation::Simulation(Input* input, GraphWindow* _graph_win) : input(input)
 {
     is_running = false;
+    is_drawing = false;
+
+    graph_win = _graph_win;
+
+    connectSignalSlot();
+    //connect(this, SIGNAL(draw(int)), graph_win, SLOT(testing()));
+}
+void Simulation::connectSignalSlot()
+{
+    connect(this, SIGNAL(addGraph(GRAPHS, ALG_VARIANT)), graph_win, SLOT(addGraph(GRAPHS,ALG_VARIANT,QCPAxis*,QCPAxis*)));
 }
 
 void Simulation::start()
@@ -65,6 +75,12 @@ void Simulation::start()
                 }
             }
 
+            if(is_drawing)
+            {
+                cout << "i am open but invisible for now" << endl;
+                //emit draw();
+            }
+
             emit render();
 
             QThread::msleep(500);
@@ -85,10 +101,21 @@ void Simulation::start()
 void Simulation::stop()
 {
     is_running = false;
+    is_drawing = false;
     emit finished();
+}
+
+void Simulation::startDrawing()
+{
+    is_drawing = true;
+    for(AlgModel* alg : input->algos)
+    {
+        emit addGraph(MAX_RANGE, alg->alg);
+    }
 }
 
 Simulation::~Simulation()
 {
+//do not delete graph_win
 }
 
