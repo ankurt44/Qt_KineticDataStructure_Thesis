@@ -22,7 +22,8 @@ public slots:
 signals:
     void render(); //tell drawing widget to render
     void finished(); //perform extra work after finished
-    void addGraph(GRAPHS _graph, ALG_VARIANT _alg);
+    void addGraph(GRAPHS _graph, ALG_VARIANT _alg, QCPAxis* x = 0, QCPAxis* y = 0);
+    void addData(GRAPHS _graph, ALG_VARIANT _alg, double key, double value);
 
 private:
     void connectSignalSlot();

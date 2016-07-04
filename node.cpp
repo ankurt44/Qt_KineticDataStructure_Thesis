@@ -6,7 +6,7 @@ Node::Node(const Vector2f& _pos, float _velocity, float _range)
 {
     pos = _pos;
     velocity= _velocity;
-    range = _range;
+    //range = _range;
     cell = VoronoiCell();
 }
 
@@ -14,15 +14,15 @@ Node::Node(const Node& node)
 {
     pos = node.pos;
     velocity = node.velocity;
-    range = node.range;
+    //range = node.range;
     cell = node.cell;
 }
 
-float Node::getRange()
+/*float Node::getRange()
 {
     //cout << range << endl;
     return range;
-}
+}*/
 
 const Node* Node::getFarChild()
 {
@@ -40,9 +40,19 @@ const Node* Node::getFarChild()
     return far_child;
 }
 
-double Node::getEnergy()
+void Node::updateInitialRange(ALG_VARIANT _alg, float _time)
 {
-    return C*pow(range, FACTOR);
+    if(alg_range.find(_alg) == alg_range.end())
+        alg_range.insert(make_pair(_alg, vector<pair<float, float> >()));
+
+    float range = Tools::distance(this->pos, this->getFarChild()->pos);
+
+    alg_range.find(_alg)->second.push_back(make_pair(_time, range));
+}
+
+double Node::getEnergy(float _range)
+{
+    return C*pow(_range, FACTOR);
 }
 
 void Node::addInterpolation(ALG_VARIANT _alg, vector<pair<float, float> > _i)
@@ -74,9 +84,31 @@ float Node::getRangeAt(ALG_VARIANT _alg, float _time)
     return 0.0f;
 }
 
-float Node::updateRangeAt(ALG_VARIANT _alg, float _time)
+void Node::updateRangeAt(ALG_VARIANT _alg, float _time)
 {
-    //ToDo :: create a list for each algorithm and add ranges at times to the list also,
-    range = getRangeAt(_alg, _time);
-    return range;
+    if(alg_range.find(_alg) == alg_range.end())
+        alg_range.insert(make_pair(_alg, vector<pair<float, float> >()));
+
+    float range = getRangeAt(_alg, _time);
+    alg_range.find(_alg)->second.push_back(make_pair(_time, range));
 }
+
+float Node::currentRange(ALG_VARIANT _alg)
+{
+    if(alg_range.find(_alg) ==  alg_range.end())
+        return 0;
+
+    int data_count = alg_range.find(_alg)->second.size();
+
+    if(data_count == 0)
+        return 0;
+
+    return alg_range.find(_alg)->second[data_count-1].second;
+}
+
+vector<pair<float, float> > Node::rangeDataVector(ALG_VARIANT _alg)
+{
+    return alg_range.find(_alg)->second;
+}
+
+

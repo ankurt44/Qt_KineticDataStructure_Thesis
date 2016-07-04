@@ -26,10 +26,10 @@ void RenderArea::appearance(int r, int g, int b, int a)
     this->setPalette(pal);
 }
 
-void RenderArea::render(const Input* input)
+void RenderArea::render(const Input* _input)
 {
-    //input = input;
-    nodes = input->nodes;
+    input = _input;
+    nodes = _input->nodes;
     update();
 }
 
@@ -55,7 +55,7 @@ void RenderArea::paintNode(QPainter *painter, QPaintEvent *event, Node& node)
 
     painter->setPen(QPen(QBrush(Qt::green), 2));
     painter->setBrush(Qt::NoBrush);
-    int  range = node.getRange();
+    int  range = node.currentRange(input->selected_alg);
     painter->drawEllipse(QPoint(node.pos.x, node.pos.y), range, range); //ToDo : center and radius are not accurate (not in float)
 
     painter->setPen(QPen(QBrush(Qt::blue), 2));
@@ -94,7 +94,9 @@ void RenderArea::testPaint(QPainter* painter, QPaintEvent *event)
     nodes.push_back(node10);
     nodes.push_back(node14);
 
-    AlgVoronoi::voronoiDiagram(nodes);
+
+    AlgVoronoi a = AlgVoronoi();
+    a.voronoiDiagram(nodes);
 
     painter->setPen(QPen(QBrush(Qt::red), 4));
     painter->setBrush(QBrush(Qt::red));

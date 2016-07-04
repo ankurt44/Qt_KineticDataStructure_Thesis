@@ -52,8 +52,8 @@ VoronoiCell AlgVoronoi::getHalfPlane(Node &node1, Node &node2)
     {
     double dist = Tools::distance(node1.pos, node2.pos);
     double dist_sq = dist * dist;
-    double r1_sq = node1.getRange() * node1.getRange();
-    double r2_sq = node2.getRange() * node2.getRange();
+    double r1_sq = node1.currentRange(this->alg) * node1.currentRange(this->alg);
+    double r2_sq = node2.currentRange(this->alg) * node2.currentRange(this->alg);
 
     param = ((r1_sq - r2_sq) + dist_sq)/ (2 *dist_sq);
     }

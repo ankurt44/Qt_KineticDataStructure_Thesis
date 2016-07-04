@@ -29,7 +29,7 @@ private:
 
 
     vector<Node> nodes;
-    //Input* input;
+    const Input* input;
     QBrush* brush;
     QPen* pen;
     QFont* font;

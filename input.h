@@ -12,6 +12,7 @@ class Input
 public:
     vector<Node> nodes;
     float interval_length;
+    ALG_VARIANT selected_alg;
     //ToDo : register movement model
 
     //ToDo : register algorithms

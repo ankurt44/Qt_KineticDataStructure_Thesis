@@ -1,6 +1,8 @@
 #ifndef CONSTANTS
 #define CONSTANTS
 
+#include <QMetaType>
+
 const float PI =  3.14159265;
 
 //define a big bounding box (bb)
@@ -20,6 +22,7 @@ const static int GRAPH_WIN_HEIGHT = 600;
 const static int GRAPH_WIN_MARGIN = 20;
 
 enum GRAPHS {MAX_RANGE, AVG_RANGE, TOTAL_SUM};
+Q_DECLARE_METATYPE(GRAPHS);
 
 #endif // CONSTANTS
 

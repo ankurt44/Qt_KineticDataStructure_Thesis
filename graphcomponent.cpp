@@ -40,10 +40,12 @@ void GraphComponent::addGraphData(ALG_VARIANT _alg, double key, double value)
     if(it != graphs.end())
     {
         it->second->addData(key, value);
-        QCustomPlot::yAxis->setRange(value+2,10,Qt::AlignTop);
-        QCustomPlot::xAxis->setRange(key+5 ,50 ,Qt::AlignRight);
+        QCustomPlot::yAxis->setRange(value+2,500 ,Qt::AlignTop);
+        QCustomPlot::xAxis->setRange(key+5 ,500 ,Qt::AlignRight);
         QCustomPlot::replot();
     }
+
+    //cout << "key " << key << " value " << value << endl;
 }
 
 void GraphComponent::removeGraph(ALG_VARIANT _alg)

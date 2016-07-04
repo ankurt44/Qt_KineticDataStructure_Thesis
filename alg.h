@@ -1,7 +1,9 @@
 #ifndef ALG
 #define ALG
+#include <QMetaType>
 
 enum ALG_VARIANT {DIRECT_RANGE_ASSIGN, NORMAL_INTERPOLATION, VORONOI};
+Q_DECLARE_METATYPE(ALG_VARIANT);
 
 #endif // ALG
 

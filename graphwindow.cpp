@@ -9,6 +9,10 @@ GraphWindow::GraphWindow(QWidget *parent)
     :QWidget(parent)
 {
     QPushButton* yo_btn = new QPushButton("I am here", this);
+    graph_components = map<GRAPHS, GraphComponent*>();
+    GraphComponent* graph_max_range = new GraphComponent(this);
+    graph_max_range->setFixedSize(500,500);
+    graph_components.insert(make_pair(MAX_RANGE, graph_max_range));
 }
 
 GraphWindow::~GraphWindow()

@@ -5,6 +5,12 @@
 #include "ui_mainwindow.h"
 #include "graphwindow.h"
 
+/*
+ * ToDo : close all on closing main window (for example - close graph win)
+ * ToDo : function to define different states (disable/enable controls)- AppStart, AppStop, etc
+ *
+ */
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -97,6 +103,8 @@ void MainWindow::openGraphWin()
 MainWindow::~MainWindow()
 {
     delete ui;
+    graph_win->close();
+    delete graph_win;
 }
 
 void MainWindow::createUI()

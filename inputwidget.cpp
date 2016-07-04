@@ -5,6 +5,7 @@
 #include "tools.h"
 #include "algorithm.h"
 #include "algbroadcastinterpolate.h"
+#include "algbroadcastdirect.h"
 
 InputWidget::InputWidget(QWidget* parent) : QWidget(parent)
 {
@@ -40,6 +41,8 @@ void InputWidget::createInput(Input& input)
 
     //add algorithms
     input.algos.push_back(new AlgBroadcastInterpolate);
+    input.selected_alg = NORMAL_INTERPOLATION;
+    input.algos.push_back(new AlgBroadcastDirect);
 }
 
 void InputWidget::createUI()

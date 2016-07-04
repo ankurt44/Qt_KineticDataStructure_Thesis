@@ -17,7 +17,12 @@ Simulation::Simulation(Input* input, GraphWindow* _graph_win) : input(input)
 }
 void Simulation::connectSignalSlot()
 {
-    connect(this, SIGNAL(addGraph(GRAPHS, ALG_VARIANT)), graph_win, SLOT(addGraph(GRAPHS,ALG_VARIANT,QCPAxis*,QCPAxis*)));
+    qRegisterMetaType<GRAPHS>("GRAPHS");
+    qRegisterMetaType<ALG_VARIANT>("ALG_VARIANT");
+    connect(this, SIGNAL(addGraph(GRAPHS, ALG_VARIANT, QCPAxis*, QCPAxis*)),
+            graph_win, SLOT(addGraph(GRAPHS,ALG_VARIANT, QCPAxis*, QCPAxis*)));
+    connect(this, SIGNAL(addData(GRAPHS,ALG_VARIANT,double,double)),
+            graph_win, SLOT(addGraphData(GRAPHS,ALG_VARIANT,double,double)));
 }
 
 void Simulation::start()
@@ -75,15 +80,18 @@ void Simulation::start()
                 }
             }
 
-            if(is_drawing)
-            {
-                cout << "i am open but invisible for now" << endl;
-                //emit draw();
-            }
-
             emit render();
 
             QThread::msleep(500);
+
+
+            if(is_drawing)
+            {
+            //emit add data signal to add data to graph
+                for(AlgModel* alg : input->algos)
+                    emit addData(MAX_RANGE, alg->alg, new_time/100,
+                                 input->nodes[input->getSourceIndex()].currentRange(alg->alg));
+            }
 
             prev_time = new_time;
         }

@@ -40,11 +40,13 @@ public:
 
     Node(const Node& node);
 
-    float getRange();
+    //float getRange();
 
     const Node* getFarChild();
 
-    double getEnergy();
+    void updateInitialRange(ALG_VARIANT _alg, float _time);
+
+    double getEnergy(float _range);
 
     void addInterpolation(ALG_VARIANT _alg, vector<pair<float, float> > _i);
 
@@ -52,14 +54,20 @@ public:
     //                                  (default could be a function that does linear interpolation)
     float getRangeAt(ALG_VARIANT _alg, float _time);
 
-    float updateRangeAt(ALG_VARIANT _alg, float _time);
+    void updateRangeAt(ALG_VARIANT _alg, float _time);
+
+    float currentRange(ALG_VARIANT _alg);
+
+    vector<pair<float, float> > rangeDataVector(ALG_VARIANT _alg);
 
 private:
     //force to call getRange, and update range as per farthest child
-    float range;
+    //float range;
 
     //variant to <time, range>
     map<ALG_VARIANT, vector<pair<float, float> > > interpolation;
+
+    map<ALG_VARIANT, vector<pair<float, float> > > alg_range;
 
 };
 
