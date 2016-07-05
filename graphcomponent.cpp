@@ -8,7 +8,7 @@ GraphComponent::GraphComponent(QWidget *parent)
 
 }
 
-void GraphComponent::addGraph(ALG_VARIANT _alg, QCPAxis *keyAxis, QCPAxis *valueAxis)
+void GraphComponent::addGraph(ALG_VARIANT _alg, Qt::GlobalColor color, QCPAxis *keyAxis, QCPAxis *valueAxis)
 {
     if(graphs.find(_alg) != graphs.end())
     {
@@ -17,7 +17,7 @@ void GraphComponent::addGraph(ALG_VARIANT _alg, QCPAxis *keyAxis, QCPAxis *value
     }
 
     graphs.insert(std::make_pair(_alg, QCustomPlot::addGraph(keyAxis, valueAxis)));
-    graphs.find(_alg)->second->setPen(QPen(Qt::blue));
+    graphs.find(_alg)->second->setPen(QPen(color));
     graphs.find(_alg)->second->setLineStyle(QCPGraph::lsNone);
     graphs.find(_alg)->second->setScatterStyle(QCPScatterStyle::ssDisc);
 }
@@ -41,7 +41,7 @@ void GraphComponent::addGraphData(ALG_VARIANT _alg, double key, double value)
     {
         it->second->addData(key, value);
         QCustomPlot::yAxis->setRange(value+2,500 ,Qt::AlignTop);
-        QCustomPlot::xAxis->setRange(key+5 ,500 ,Qt::AlignRight);
+        QCustomPlot::xAxis->setRange(key+1 ,60 ,Qt::AlignRight);
         QCustomPlot::replot();
     }
 

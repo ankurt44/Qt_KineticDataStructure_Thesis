@@ -39,18 +39,25 @@ void RenderArea::paintEvent(QPaintEvent *event)
     painter->begin(this);
     painter->setRenderHint(QPainter::Antialiasing);
 
-    for(Node& node : nodes)
+    for(int i = 0; i < nodes.size(); i++)
     {
-        paintNode(painter, event, node);
+        if(input->getSourceIndex() == i)
+            paintNode(painter, event, nodes[i], true);
+
+        paintNode(painter, event, nodes[i], false);
     }
     //testPaint(painter, event);    //to test halfplane intersections and voronoi diagrams
     painter->end();
 }
 
-void RenderArea::paintNode(QPainter *painter, QPaintEvent *event, Node& node)
+void RenderArea::paintNode(QPainter *painter, QPaintEvent *event, const Node& node, bool _is_source)
 {
     painter->setPen(QPen(QBrush(Qt::red), 5));
     painter->setBrush(QBrush(Qt::red));
+    if(_is_source)
+        painter->setPen(QPen(QBrush(Qt::black), 10)),
+        painter->setBrush(QBrush(Qt::black));
+
     painter->drawPoint(node.pos.x, node.pos.y);
 
     painter->setPen(QPen(QBrush(Qt::green), 2));
@@ -70,8 +77,8 @@ void RenderArea::testPaint(QPainter* painter, QPaintEvent *event)
     //painter->drawPoint(node.pos.x, node.pos.y);
     //painter->drawLine(node.x, node.y, 200, 200);
 
-    Node node1(Vector2f(10, 200));
-    Node node2(Vector2f(300, 300));
+    Node node1(Vector2f(100, 200));
+    Node node2(Vector2f(400, 500));
     Node node3(Vector2f(600, 400));
     Node node4(Vector2f(950, 250));
     Node node14(Vector2f(150, 670));
@@ -81,9 +88,12 @@ void RenderArea::testPaint(QPainter* painter, QPaintEvent *event)
     Node node8(Vector2f(250, 50));
     Node node9(Vector2f(850, 150));
     Node node10(Vector2f(900, 550));
+    node2.alg_range.insert(make_pair(VORONOI_PREV, vector<pair<float, float> >()));
+    node2.alg_range.find(VORONOI_PREV)->second.push_back(make_pair(0,350));
     vector<Node> nodes;
     nodes.push_back(node1);
     nodes.push_back(node2);
+    /*
     nodes.push_back(node3);
     nodes.push_back(node4);
     nodes.push_back(node5);
@@ -93,9 +103,9 @@ void RenderArea::testPaint(QPainter* painter, QPaintEvent *event)
     nodes.push_back(node9);
     nodes.push_back(node10);
     nodes.push_back(node14);
+    */
 
-
-    AlgVoronoi a = AlgVoronoi();
+    AlgVoronoi a;
     a.voronoiDiagram(nodes);
 
     painter->setPen(QPen(QBrush(Qt::red), 4));
@@ -103,6 +113,13 @@ void RenderArea::testPaint(QPainter* painter, QPaintEvent *event)
 
     for(Node n : nodes)
     {
+        painter->drawPoint(n.pos.x, n.pos.y);
+
+        painter->setPen(QPen(QBrush(Qt::green), 2));
+        painter->setBrush(Qt::NoBrush);
+        int  range = n.currentRange(VORONOI_PREV);
+        painter->drawEllipse(QPoint(n.pos.x, n.pos.y), range, range);
+
         painter->drawPoint(n.pos.x, n.pos.y);
         VoronoiCell c1 = n.cell;
         for(auto it = c1.left.begin(); it != c1.left.end()-1; it++)

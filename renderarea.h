@@ -23,7 +23,7 @@ private:
     void createUI();
     void appearance(int r, int g, int b, int a);
 
-    void paintNode(QPainter *painter, QPaintEvent *event, Node& node);
+    void paintNode(QPainter *painter, QPaintEvent *event, const Node& node, bool _is_source);
     void testPaint(QPainter* painter, QPaintEvent *event);
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 

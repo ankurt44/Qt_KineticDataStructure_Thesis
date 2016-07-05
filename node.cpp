@@ -16,13 +16,11 @@ Node::Node(const Node& node)
     velocity = node.velocity;
     //range = node.range;
     cell = node.cell;
+    order = node.order;
+    children = node.children;
+    alg_range = node.alg_range;
+    interpolation = node.interpolation;
 }
-
-/*float Node::getRange()
-{
-    //cout << range << endl;
-    return range;
-}*/
 
 const Node* Node::getFarChild()
 {
@@ -50,9 +48,9 @@ void Node::updateInitialRange(ALG_VARIANT _alg, float _time)
     alg_range.find(_alg)->second.push_back(make_pair(_time, range));
 }
 
-double Node::getEnergy(float _range)
+double Node::getPower(ALG_VARIANT _alg) const
 {
-    return C*pow(_range, FACTOR);
+    return C*pow(this->currentRange(_alg), FACTOR);
 }
 
 void Node::addInterpolation(ALG_VARIANT _alg, vector<pair<float, float> > _i)
@@ -93,7 +91,7 @@ void Node::updateRangeAt(ALG_VARIANT _alg, float _time)
     alg_range.find(_alg)->second.push_back(make_pair(_time, range));
 }
 
-float Node::currentRange(ALG_VARIANT _alg)
+float Node::currentRange(ALG_VARIANT _alg) const
 {
     if(alg_range.find(_alg) ==  alg_range.end())
         return 0;

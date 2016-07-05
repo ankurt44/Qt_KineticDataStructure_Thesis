@@ -22,7 +22,7 @@ public slots:
 signals:
     void render(); //tell drawing widget to render
     void finished(); //perform extra work after finished
-    void addGraph(GRAPHS _graph, ALG_VARIANT _alg, QCPAxis* x = 0, QCPAxis* y = 0);
+    void addGraph(GRAPHS _graph, ALG_VARIANT _alg, Qt::GlobalColor color, QCPAxis* x = 0, QCPAxis* y = 0);
     void addData(GRAPHS _graph, ALG_VARIANT _alg, double key, double value);
 
 private:
@@ -34,6 +34,8 @@ private:
     bool is_drawing;
     Input* input;
 
+    double getMax(const vector<Node>& nodes, ALG_VARIANT _alg);
+    double getTotal(const vector<Node>& nodes, ALG_VARIANT _alg);
 };
 
 #endif // SIMULATION

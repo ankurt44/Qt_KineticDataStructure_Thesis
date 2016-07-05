@@ -21,7 +21,10 @@ const static int GRAPH_WIN_WIDTH = 1000;
 const static int GRAPH_WIN_HEIGHT = 600;
 const static int GRAPH_WIN_MARGIN = 20;
 
-enum GRAPHS {MAX_RANGE, AVG_RANGE, TOTAL_SUM};
+const static int GRAPH_WIDTH = 400;
+const static int GRAPH_HEIGHT = 350;
+
+enum GRAPHS {MAX_RANGE, AVG_RANGE, TOTAL_SUM_RANGE, MEDIAN_RANGE};
 Q_DECLARE_METATYPE(GRAPHS);
 
 #endif // CONSTANTS

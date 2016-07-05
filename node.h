@@ -23,17 +23,6 @@ struct EnumClassHash
 class Node
 {
 public:
-    const static float C = 1;
-    const static float FACTOR = 2;
-
-    Vector2f pos;
-    vector<Node*> children;
-    //vector<Node*> children;
-    VoronoiCell cell;
-    float velocity;
-    int order;
-
-
     Node() = default;
 
     Node(const Vector2f& _pos, float _velocity = 0.0f, float _range = 0.0f);
@@ -46,7 +35,7 @@ public:
 
     void updateInitialRange(ALG_VARIANT _alg, float _time);
 
-    double getEnergy(float _range);
+    double getPower(ALG_VARIANT _alg) const;
 
     void addInterpolation(ALG_VARIANT _alg, vector<pair<float, float> > _i);
 
@@ -56,10 +45,21 @@ public:
 
     void updateRangeAt(ALG_VARIANT _alg, float _time);
 
-    float currentRange(ALG_VARIANT _alg);
+    float currentRange(ALG_VARIANT _alg) const;
 
     vector<pair<float, float> > rangeDataVector(ALG_VARIANT _alg);
 
+    const static float C = 1;
+    const static float FACTOR = 2;
+
+    Vector2f pos;
+    vector<Node*> children;
+    //vector<Node*> children;
+    VoronoiCell cell;
+    float velocity;
+    int order;
+
+    map<ALG_VARIANT, vector<pair<float, float> > > alg_range;
 private:
     //force to call getRange, and update range as per farthest child
     //float range;
@@ -67,7 +67,6 @@ private:
     //variant to <time, range>
     map<ALG_VARIANT, vector<pair<float, float> > > interpolation;
 
-    map<ALG_VARIANT, vector<pair<float, float> > > alg_range;
 
 };
 

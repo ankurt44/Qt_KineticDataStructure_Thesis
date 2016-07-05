@@ -1,12 +1,13 @@
 
 #include "algvoronoi.h"
 
-AlgVoronoi::AlgVoronoi()
+AlgVoronoi::AlgVoronoi(ALG_VARIANT _alg)
 {
-
+    alg = _alg;
+    graph_color = Qt::green;
 }
 
-void AlgVoronoi::execute(vector<Node> &nodes, float m_interval_start, float m_interval_end)
+void AlgVoronoi::execute(vector<Node>& nodes, float m_interval_start, float m_interval_end)
 {
 
 }

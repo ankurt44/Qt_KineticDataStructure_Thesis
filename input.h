@@ -44,9 +44,7 @@ public:
         return &nodes[source];
     }
 
-
-
-    int getSourceIndex()
+    int getSourceIndex() const
     {
         return source;
     }

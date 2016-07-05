@@ -7,7 +7,7 @@ class AlgVoronoi : public AlgModel
 {
 public:
 
-    AlgVoronoi();
+    AlgVoronoi(ALG_VARIANT _alg = VORONOI_PREV);
 
     virtual void execute(vector<Node>& nodes, float m_interval_start, float m_interval_end) override;
 

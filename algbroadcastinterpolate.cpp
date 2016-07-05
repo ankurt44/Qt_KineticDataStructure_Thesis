@@ -6,6 +6,7 @@
 AlgBroadcastInterpolate::AlgBroadcastInterpolate()
 {
     alg = NORMAL_INTERPOLATION;
+    graph_color = Qt::blue;
 }
 
 void AlgBroadcastInterpolate::execute(vector<Node>& nodes, float m_interval_start, float m_interval_end)

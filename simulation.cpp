@@ -19,8 +19,9 @@ void Simulation::connectSignalSlot()
 {
     qRegisterMetaType<GRAPHS>("GRAPHS");
     qRegisterMetaType<ALG_VARIANT>("ALG_VARIANT");
-    connect(this, SIGNAL(addGraph(GRAPHS, ALG_VARIANT, QCPAxis*, QCPAxis*)),
-            graph_win, SLOT(addGraph(GRAPHS,ALG_VARIANT, QCPAxis*, QCPAxis*)));
+    qRegisterMetaType<Qt::GlobalColor>("Qt::GlobalColor");
+    connect(this, SIGNAL(addGraph(GRAPHS, ALG_VARIANT, Qt::GlobalColor, QCPAxis*, QCPAxis*)),
+            graph_win, SLOT(addGraph(GRAPHS,ALG_VARIANT, Qt::GlobalColor, QCPAxis*, QCPAxis*)));
     connect(this, SIGNAL(addData(GRAPHS,ALG_VARIANT,double,double)),
             graph_win, SLOT(addGraphData(GRAPHS,ALG_VARIANT,double,double)));
 }
@@ -88,9 +89,15 @@ void Simulation::start()
             if(is_drawing)
             {
             //emit add data signal to add data to graph
+                //ToDo ::: add color and style in algorithm,,, send it to graphwindow,,,
+                //add methods for different graphs -- max, avg, total, median
                 for(AlgModel* alg : input->algos)
-                    emit addData(MAX_RANGE, alg->alg, new_time/100,
-                                 input->nodes[input->getSourceIndex()].currentRange(alg->alg));
+                    emit addData(MAX_RANGE, alg->alg, new_time/1000,
+                                 getMax(input->nodes, alg->alg)/1000);
+                                 //input->nodes[input->getSourceIndex()].currentRange(alg->alg));
+                for(AlgModel* alg : input->algos)
+                    emit addData(TOTAL_SUM_RANGE, alg->alg, new_time/1000,
+                                 getTotal(input->nodes, alg->alg)/1000);
             }
 
             prev_time = new_time;
@@ -106,6 +113,32 @@ void Simulation::start()
 
 }
 
+double Simulation::getMax(const vector<Node>& nodes, ALG_VARIANT _alg)
+{
+    double max_power = nodes[0].getPower(_alg);
+
+    double p = 0;
+
+    for(const Node& n: nodes)
+    {
+        p = n.getPower(_alg);
+        if(max_power < p)
+            max_power = p;
+    }
+    return max_power;
+}
+
+double Simulation::getTotal(const vector<Node> &nodes, ALG_VARIANT _alg)
+{
+    double total_power = 0;
+
+    for(const Node& n: nodes)
+    {
+        total_power += n.getPower(_alg);
+    }
+    return total_power;
+}
+
 void Simulation::stop()
 {
     is_running = false;
@@ -118,7 +151,11 @@ void Simulation::startDrawing()
     is_drawing = true;
     for(AlgModel* alg : input->algos)
     {
-        emit addGraph(MAX_RANGE, alg->alg);
+        emit addGraph(MAX_RANGE, alg->alg, alg->graph_color);
+    }
+    for(AlgModel* alg : input->algos)
+    {
+        emit addGraph(TOTAL_SUM_RANGE, alg->alg, alg->graph_color);
     }
 }
 
