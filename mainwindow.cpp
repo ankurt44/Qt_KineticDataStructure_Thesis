@@ -37,6 +37,9 @@ void MainWindow::start()
         lbl_status->setText("Already running. Press stop to stop");
         return;
     }
+
+    input_widget->hide();
+
     lbl_status->setText("Running");
     is_running = true;
 
@@ -91,6 +94,7 @@ void MainWindow::stop()
     lbl_status->setText("Stopped. Click Play to start simulation.");
 
     //ToDo : set controls state to initial state -- disable and enable controls
+    input_widget->show();
 }
 
 void MainWindow::openGraphWin()
@@ -134,8 +138,8 @@ void MainWindow::createUI()
 
     //add components to layout
     g_layout->addWidget(render_area, 0, 0, Qt::AlignCenter);
-    g_layout->addWidget(input_widget, 1, 0, Qt::AlignLeft);
-    g_layout->addWidget(h_group_box, 2, 0, Qt::AlignLeft);
+    g_layout->addWidget(input_widget, 1, 0, Qt::AlignCenter);
+    g_layout->addWidget(h_group_box, 2, 0, Qt::AlignCenter);
 
     this->setCentralWidget(central_widget);
 

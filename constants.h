@@ -17,8 +17,8 @@ const static int WIDTH = 1200;
 const static int HEIGHT = 800;
 const static int MARGIN = 20;
 
-const static int GRAPH_WIN_WIDTH = 1000;
-const static int GRAPH_WIN_HEIGHT = 600;
+const static int GRAPH_WIN_WIDTH = 900;
+const static int GRAPH_WIN_HEIGHT = 820;
 const static int GRAPH_WIN_MARGIN = 20;
 
 const static int GRAPH_WIDTH = 400;

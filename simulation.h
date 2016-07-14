@@ -23,6 +23,7 @@ signals:
     void render(); //tell drawing widget to render
     void finished(); //perform extra work after finished
     void addGraph(GRAPHS _graph, ALG_VARIANT _alg, Qt::GlobalColor color, QCPAxis* x = 0, QCPAxis* y = 0);
+    void setData(GRAPHS graph, ALG_VARIANT _alg, QVector<double> key, QVector<double> value);
     void addData(GRAPHS _graph, ALG_VARIANT _alg, double key, double value);
 
 private:
@@ -36,6 +37,7 @@ private:
 
     double getMax(const vector<Node>& nodes, ALG_VARIANT _alg);
     double getTotal(const vector<Node>& nodes, ALG_VARIANT _alg);
+    double getAvg(const vector<Node> &nodes, ALG_VARIANT _alg);
 };
 
 #endif // SIMULATION

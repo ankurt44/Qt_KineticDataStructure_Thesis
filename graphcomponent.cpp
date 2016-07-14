@@ -18,8 +18,8 @@ void GraphComponent::addGraph(ALG_VARIANT _alg, Qt::GlobalColor color, QCPAxis *
 
     graphs.insert(std::make_pair(_alg, QCustomPlot::addGraph(keyAxis, valueAxis)));
     graphs.find(_alg)->second->setPen(QPen(color));
-    graphs.find(_alg)->second->setLineStyle(QCPGraph::lsNone);
-    graphs.find(_alg)->second->setScatterStyle(QCPScatterStyle::ssDisc);
+    graphs.find(_alg)->second->setLineStyle(QCPGraph::lsLine);
+    //graphs.find(_alg)->second->setScatterStyle(QCPScatterStyle::ssDisc);
 }
 
 void GraphComponent::setGraphData(ALG_VARIANT _alg, QVector<double> key, QVector<double> value)

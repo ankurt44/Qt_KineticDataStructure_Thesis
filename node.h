@@ -43,7 +43,8 @@ public:
     //                                  (default could be a function that does linear interpolation)
     float getRangeAt(ALG_VARIANT _alg, float _time);
 
-    void updateRangeAt(ALG_VARIANT _alg, float _time);
+    void updateRangeAt(ALG_VARIANT _alg, float _total_time, float _time); //updates time and range;
+                                                                          //_time is used to get range within interval period
 
     float currentRange(ALG_VARIANT _alg) const;
 
@@ -53,16 +54,17 @@ public:
     const static float FACTOR = 2;
 
     Vector2f pos;
+    pair<Vector2f, Vector2f> direction;
     vector<Node*> children;
-    //vector<Node*> children;
     VoronoiCell cell;
     float velocity;
     int order;
 
-    map<ALG_VARIANT, vector<pair<float, float> > > alg_range;
 private:
     //force to call getRange, and update range as per farthest child
     //float range;
+
+    map<ALG_VARIANT, vector<pair<float, float> > > alg_range;
 
     //variant to <time, range>
     map<ALG_VARIANT, vector<pair<float, float> > > interpolation;

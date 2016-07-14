@@ -34,7 +34,10 @@ private:
     QLabel* lbl_velocity;
     QLineEdit* txt_velocity;
 
-    QPushButton* btn_save;
+    //movement model
+    QLineEdit* txt_direction;
+    QLineEdit* txt_speed;
+
 };
 
 #endif // INPUTWIDGET

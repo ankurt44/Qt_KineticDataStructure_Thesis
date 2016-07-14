@@ -5,14 +5,15 @@
 Node::Node(const Vector2f& _pos, float _velocity, float _range)
 {
     pos = _pos;
+    direction = make_pair(_pos, _pos);
     velocity= _velocity;
-    //range = _range;
     cell = VoronoiCell();
 }
 
 Node::Node(const Node& node)
 {
     pos = node.pos;
+    direction = make_pair(pos, pos);
     velocity = node.velocity;
     //range = node.range;
     cell = node.cell;
@@ -55,6 +56,11 @@ double Node::getPower(ALG_VARIANT _alg) const
 
 void Node::addInterpolation(ALG_VARIANT _alg, vector<pair<float, float> > _i)
 {
+    if(interpolation.find(_alg) != interpolation.end())
+    {
+        interpolation.find(_alg)->second = _i;
+        return;
+    }
     interpolation.insert(make_pair(_alg, _i));
 }
 
@@ -82,13 +88,14 @@ float Node::getRangeAt(ALG_VARIANT _alg, float _time)
     return 0.0f;
 }
 
-void Node::updateRangeAt(ALG_VARIANT _alg, float _time)
+void Node::updateRangeAt(ALG_VARIANT _alg, float _total_time, float _time)
 {
     if(alg_range.find(_alg) == alg_range.end())
         alg_range.insert(make_pair(_alg, vector<pair<float, float> >()));
 
     float range = getRangeAt(_alg, _time);
-    alg_range.find(_alg)->second.push_back(make_pair(_time, range));
+
+    alg_range.find(_alg)->second.push_back(make_pair(_total_time, range));
 }
 
 float Node::currentRange(ALG_VARIANT _alg) const

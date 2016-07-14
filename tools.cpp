@@ -1,4 +1,5 @@
 #include "tools.h"
+#include <math.h>
 
 
 double Tools::distance(const Vector2f& v1, const Vector2f& v2)
@@ -19,10 +20,29 @@ double Tools::randomnum(double min, double max)
     return min + r;
 }
 
-void Tools::nextRandomPosition(Vector2f& curr_pos, double speed, double dt, float min_arc_ang, float max_arc_ang)
+void Tools::nextRandomPosition(Vector2f& curr_pos, pair<Vector2f,Vector2f>& direction,
+                               float direction_factor, double speed, double dt)
 {
     double disp = speed * dt;
-    double ang = Tools::randomnum(min_arc_ang, max_arc_ang);
+    double ang;
+    if(direction.first == direction.second)
+    {
+        ang = Tools::randomnum(0, 360);
+        cout << "function random - if" << endl;
+    }
+    else
+    {
+        ang = Tools::randomnum(0, (direction_factor>360)?360:direction_factor);
+
+        double slope_direction = (direction.first.y - direction.second.y)/(direction.first.x - direction.second.x);
+        double ang_xaxis = atan(slope_direction);
+
+        ang = 180 - ang - direction_factor/2; //check by making a drawing of it
+        cout << "function random - else" << endl;
+    }
+
+    cout << ang << endl;
+
     double ang_rad = ang * 2 * PI / 360;
 
     double disp_x_max = disp * (double) cos(ang_rad);
@@ -30,10 +50,8 @@ void Tools::nextRandomPosition(Vector2f& curr_pos, double speed, double dt, floa
     double disp_x = Tools::randomnum((disp_x_max<0)?disp_x_max:0, (disp_x_max>0)?disp_x_max:0);
     double disp_y = Tools::randomnum((disp_y_max<0)?disp_y_max:0, (disp_y_max>0)?disp_y_max:0);
 
-    curr_pos.x += disp_x;
-    curr_pos.y += disp_y;
-    //curr_pos.x += disp * (double) cos(ang_rad);
-    //curr_pos.y += disp * (double) sin(ang_rad);
+    curr_pos.x += disp_x_max;
+    curr_pos.y += disp_y_max;
 }
 
 //dot product v1v2.v2v3

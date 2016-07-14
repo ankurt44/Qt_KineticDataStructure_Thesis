@@ -9,8 +9,30 @@ AlgVoronoi::AlgVoronoi(ALG_VARIANT _alg)
 
 void AlgVoronoi::execute(vector<Node>& nodes, float m_interval_start, float m_interval_end)
 {
-
+    for(int i = 1; i < nodes.size(); i++)
+    {
+        vector<int> prev_nodes_index = getPrevNodes(nodes, i);
+        for(int j : prev_nodes_index)
+        {
+            vector<Node> prev_nodes;
+            prev_nodes.push_back(nodes[j]);
+            voronoiDiagram(prev_nodes);
+            //nodes[i].addInterpolation(this->alg, getInterpolation(prev_nodes, nodes[i]));
+        }
+    }
 }
+
+vector<int> AlgVoronoi::getPrevNodes(const vector<Node>& _nodes, int _curr_node)
+{
+    vector<int> prev_nodes;
+    for(int i = 0; i < _nodes.size(); i++)
+    {
+        if(_nodes[i].order < _nodes[_curr_node].order)
+            prev_nodes.push_back(i);
+    }
+    return prev_nodes;
+}
+
 
 struct NextEventComparator
 {

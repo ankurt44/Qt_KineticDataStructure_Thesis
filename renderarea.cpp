@@ -88,8 +88,8 @@ void RenderArea::testPaint(QPainter* painter, QPaintEvent *event)
     Node node8(Vector2f(250, 50));
     Node node9(Vector2f(850, 150));
     Node node10(Vector2f(900, 550));
-    node2.alg_range.insert(make_pair(VORONOI_PREV, vector<pair<float, float> >()));
-    node2.alg_range.find(VORONOI_PREV)->second.push_back(make_pair(0,350));
+    //node2.alg_range.insert(make_pair(VORONOI_PREV, vector<pair<float, float> >()));
+    //node2.alg_range.find(VORONOI_PREV)->second.push_back(make_pair(0,350));
     vector<Node> nodes;
     nodes.push_back(node1);
     nodes.push_back(node2);

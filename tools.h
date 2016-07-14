@@ -12,7 +12,8 @@ public:
 
     static double randomnum(double min, double max);
 
-    static void nextRandomPosition(Vector2f& curr_pos, double speed, double dt, float min_arc_ang, float max_arc_ang);
+    static void nextRandomPosition(Vector2f& curr_pos, pair<Vector2f,Vector2f>& direction,
+                                   float direction_factor, double speed, double dt);
 
     //dot product v1v2.v2v3
     static double dotProduct(const Vector2f& v1, const Vector2f& v2, const Vector2f& v3);

@@ -18,6 +18,7 @@ GraphWindow::GraphWindow(QWidget *parent)
     h_group_box->setLayout(controls_layout_1);
 
     graph_components = map<GRAPHS, GraphComponent*>();
+
     GraphComponent* graph_max_range = new GraphComponent(this);
     graph_max_range->setFixedSize(GRAPH_WIDTH,GRAPH_HEIGHT);
     graph_components.insert(make_pair(MAX_RANGE, graph_max_range));
@@ -48,7 +49,7 @@ GraphWindow::GraphWindow(QWidget *parent)
     controls_vertical->addWidget(h_group_box_2);
 
     widget_central->setLayout(controls_vertical);
-    this->setFixedSize(830, 730);
+    this->setFixedSize(GRAPH_WIN_WIDTH, GRAPH_WIN_HEIGHT);
 }
 
 GraphWindow::~GraphWindow()
