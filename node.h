@@ -25,7 +25,7 @@ class Node
 public:
     Node() = default;
 
-    Node(const Vector2f& _pos, float _velocity = 0.0f, float _range = 0.0f);
+    Node(const Vector2f& _pos_at_t, const Vector2f& _pos_at_t1, float _velocity = 0.0f, float _range = 0.0f);
 
     Node(const Node& node);
 
@@ -54,7 +54,8 @@ public:
     const static float FACTOR = 2;
 
     Vector2f pos;
-    pair<Vector2f, Vector2f> direction;
+    Vector2f pos_at_ti;
+    Vector2f pos_at_ti1;
     vector<Node*> children;
     VoronoiCell cell;
     float velocity;

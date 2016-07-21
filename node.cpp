@@ -2,10 +2,22 @@
 
 #include "node.h"
 
-Node::Node(const Vector2f& _pos, float _velocity, float _range)
+/*
+ * _pos_at_i will be random position before current position of the node
+ *
+ * _pos_at_i1 will be the current position
+ *
+ * _pos_at_i is just considered to be the position from where the node came when it is spawned
+ *
+ * in simulation, the next position is found at updated as Node::pos_at_ti1
+ * and Node::pos_at_ti1 will become Node::pos_at_ti
+ * and then we can interpolate Node::pos between ti and ti1
+ */
+Node::Node(const Vector2f& _pos_at_i, const Vector2f& _pos_at_i1, float _velocity, float _range)
 {
-    pos = _pos;
-    direction = make_pair(_pos, _pos);
+    pos = _pos_at_i1;
+    pos_at_ti = _pos_at_i;
+    pos_at_ti1 = _pos_at_i1;
     velocity= _velocity;
     cell = VoronoiCell();
 }
@@ -13,7 +25,8 @@ Node::Node(const Vector2f& _pos, float _velocity, float _range)
 Node::Node(const Node& node)
 {
     pos = node.pos;
-    direction = make_pair(pos, pos);
+    pos_at_ti = node.pos_at_ti;
+    pos_at_ti1 = node.pos_at_ti1;
     velocity = node.velocity;
     //range = node.range;
     cell = node.cell;
@@ -29,7 +42,7 @@ const Node* Node::getFarChild()
     Node* far_child = NULL;
     for(Node* n : children)
     {
-        float dist = Tools::distance(this->pos, n->pos);
+        float dist = Tools::distance(this->pos_at_ti, n->pos_at_ti);
         if(dist > dist_max)
         {
                 dist_max = dist;

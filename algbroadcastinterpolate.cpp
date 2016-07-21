@@ -22,9 +22,10 @@ void AlgBroadcastInterpolate::execute(vector<Node>& nodes, float m_interval_star
 
         if(far_child)
         {
-            float dist = Tools::distance(n.pos, far_child->pos);
+            float dist = Tools::distance(n.pos_at_ti, far_child->pos_at_ti);
             i.push_back(make_pair(interval_start, dist));
-            float buffer = 2 * n.velocity * (interval_end - interval_start);
+            double interval_len = (interval_end - interval_start);
+            float buffer = n.velocity * interval_len + far_child->velocity * interval_len;
             i.push_back(make_pair(interval_end, dist + buffer));
         }
         else

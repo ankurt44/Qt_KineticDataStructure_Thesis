@@ -66,6 +66,12 @@ public:
         return *res;
     }
 
+    friend Vector2f& operator/(const Vector2f& v1, float scalar)
+    {
+        Vector2f* res = new Vector2f(v1.x/scalar, v1.y/scalar);
+        return *res;
+    }
+
     friend ostream& operator<<(ostream& out, Vector2f& v)
     {
         return out << v.x << ", " << v.y;

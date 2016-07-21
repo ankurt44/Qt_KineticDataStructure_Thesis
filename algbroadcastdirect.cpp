@@ -21,7 +21,7 @@ void AlgBroadcastDirect::execute(vector<Node> &nodes, float m_interval_start, fl
 
         if(far_child)
         {
-            float dist = Tools::distance(n.pos, far_child->pos);
+            float dist = Tools::distance(n.pos_at_ti, far_child->pos_at_ti);
             float buffer = 2 * n.velocity * (interval_end - interval_start);
             i.push_back(make_pair(interval_start, dist + buffer));
             i.push_back(make_pair(interval_end, dist + buffer));

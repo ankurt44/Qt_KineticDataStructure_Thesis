@@ -24,8 +24,9 @@ public:
     enum SIDE {LEFT_C1, RIGHT_C1, LEFT_C2, RIGHT_C2};
 
 private:
-    vector<int> getPrevNodes(const vector<Node>& _nodes, int _curr_node);
+    vector<int> getResponsibleNodes(const vector<Node>& _nodes, int _curr_node);
 
+    vector<Vector2f> getPointsInCircle(const VoronoiCell& cell, Vector2f& center, float radius);
 };
 
 

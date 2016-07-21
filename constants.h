@@ -27,5 +27,8 @@ const static int GRAPH_HEIGHT = 350;
 enum GRAPHS {MAX_RANGE, AVG_RANGE, TOTAL_SUM_RANGE, MEDIAN_RANGE};
 Q_DECLARE_METATYPE(GRAPHS);
 
+//used to consider an precision error when calculating cross product
+const static float EPSILON_CROSS_PRODUCT_ERROR = 0.005;
+
 #endif // CONSTANTS
 

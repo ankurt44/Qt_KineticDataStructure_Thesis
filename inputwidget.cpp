@@ -31,18 +31,22 @@ void InputWidget::createInput(Input& input)
 
     for(int i = 0; i < num; i++)
     {
-        float _x = (float) Tools::randomnum(100, 800);
-        float _y = (float) Tools::randomnum(100, 600);
+        float _xt = (float) Tools::randomnum(100, 800);
+        float _yt = (float) Tools::randomnum(100, 600);
 
-        input.nodes.push_back(Node(Vector2f(_x, _y), velocity_max));
+        float _xt1 = (float) Tools::randomnum(100, 800);
+        float _yt1 = (float) Tools::randomnum(100, 600);
+
+        input.nodes.push_back(Node(Vector2f(_xt, _yt), Vector2f(_xt1, _yt1), velocity_max));
         //TODO : check if a node is created with same x and y
+        //ToDo : randomly assign velocity in the start [0, vmax]
     }
 
     input.setSource(Tools::randomnum(0, input.nodes.size()-1));
 
     //add movement model
     input.direction_factor = txt_direction->text().toInt();
-    input.nextRandomPosition = Tools::nextRandomPosition;
+    input.nextRandomPosition = Tools::nextAvailablePosition;
 
     //add algorithms
     input.algos.push_back(new AlgBroadcastInterpolate);

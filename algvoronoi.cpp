@@ -1,4 +1,4 @@
-
+#include<assert.h>
 #include "algvoronoi.h"
 
 AlgVoronoi::AlgVoronoi(ALG_VARIANT _alg)
@@ -9,20 +9,43 @@ AlgVoronoi::AlgVoronoi(ALG_VARIANT _alg)
 
 void AlgVoronoi::execute(vector<Node>& nodes, float m_interval_start, float m_interval_end)
 {
-    for(int i = 1; i < nodes.size(); i++)
+    map<int, vector<vector<pair<float, float> > > > node_inter;
+    float interval = (m_interval_end - m_interval_start)/1000;
+
+    for(int i = 0; i < nodes.size(); i++)
     {
-        vector<int> prev_nodes_index = getPrevNodes(nodes, i);
+        vector<int> prev_nodes_index = getResponsibleNodes(nodes, i);
+        //assert(!(nodes[i].order != 0) || prev_nodes_index.size() != 0 && "non-source node has no responsible nodes : AlgVoronoi");
+
+        if(nodes[i].order == 0)
+            continue;
+
+        vector<Node> prev_nodes;
+        prev_nodes.clear();
+
         for(int j : prev_nodes_index)
         {
-            vector<Node> prev_nodes;
             prev_nodes.push_back(nodes[j]);
-            voronoiDiagram(prev_nodes);
-            //nodes[i].addInterpolation(this->alg, getInterpolation(prev_nodes, nodes[i]));
         }
+
+        voronoiDiagram(prev_nodes);
+
+        for(Node& n : prev_nodes)
+        {
+            vector<Vector2f> points_in_circle = this->getPointsInCircle(n.cell, n.pos_at_ti, n.velocity*interval);
+
+
+
+        }
+        //nodes[i].addInterpolation(this->alg, getInterpolation(prev_nodes, nodes[i]));
+    }
+    for(int i = 1; i < nodes.size(); i++)
+    {
+
     }
 }
 
-vector<int> AlgVoronoi::getPrevNodes(const vector<Node>& _nodes, int _curr_node)
+vector<int> AlgVoronoi::getResponsibleNodes(const vector<Node>& _nodes, int _curr_node)
 {
     vector<int> prev_nodes;
     for(int i = 0; i < _nodes.size(); i++)
@@ -33,6 +56,31 @@ vector<int> AlgVoronoi::getPrevNodes(const vector<Node>& _nodes, int _curr_node)
     return prev_nodes;
 }
 
+vector<Vector2f> AlgVoronoi::getPointsInCircle(const VoronoiCell& cell, Vector2f& center, float radius)
+{
+    vector<Vector2f> points;
+    points.clear();
+    points = cell.left;
+    for(int i = cell.right.size()-2; i >= 0; i--)
+        points.push_back(cell.right[i]);
+
+    vector<Vector2f> in_circle_points;
+    for(int i = 0; i < points.size(); i++)
+    {
+        if(Tools::lieInCircle(points[i], center, radius))
+            in_circle_points.push_back(points[i]);
+
+        if(i == points.size()-1)
+            break;
+
+        vector<Vector2f> intersect_points;
+        intersect_points = Tools::circleIntersectLine(center, radius, points[i], points[i+1]);
+        if(intersect_points.size() > 0)
+            in_circle_points.insert(in_circle_points.end(), intersect_points.begin(), intersect_points.end());
+    }
+
+    return in_circle_points;
+}
 
 struct NextEventComparator
 {
@@ -45,6 +93,12 @@ struct NextEventComparator
 void AlgVoronoi::voronoiDiagram(vector<Node>& nodes)
 {
     vector<VoronoiCell> halfPlanes;
+    if(nodes.size() == 0)
+        return;
+    if(nodes.size() == 1)
+    {
+
+    }
 
     for(int i = 0; i < nodes.size(); i++)
     {
@@ -62,7 +116,7 @@ void AlgVoronoi::voronoiDiagram(vector<Node>& nodes)
     }
 }
 
-
+//ToDo : check if Node::pos works fine here, or it needs to be Node::pos_at_ti
 VoronoiCell AlgVoronoi::getHalfPlane(Node &node1, Node &node2)
 {
     //find point on line segment node1-node2

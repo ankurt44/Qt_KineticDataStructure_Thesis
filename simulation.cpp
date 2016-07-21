@@ -39,6 +39,12 @@ void Simulation::start()
     {
         interval_elapsed = 0.0;
 
+        for(Node& n : input->nodes)
+        {
+            input->nextRandomPosition(n.pos_at_ti, n.pos_at_ti1, input->direction_factor, n.velocity,
+                                      n.velocity, interval/1000);
+        }
+
         emit render();
 
         Algorithm::broadcastTree(input->nodes, input->getSourceIndex());
@@ -47,51 +53,49 @@ void Simulation::start()
 
         for(AlgModel* alg : input->algos)
         {
-            alg->execute(input->nodes, 0.0, input->interval_length);
+            alg->execute(input->nodes, 0.0, interval);
         }
 
-        while(interval - interval_elapsed > 0) //runs for given time interval
+        while(interval - interval_elapsed >= 0) //runs for given time interval
         {
-
             for(Node& n : input->nodes)
             {
-                input->nextRandomPosition(n.pos, n.direction, input->direction_factor, n.velocity, interval_elapsed/1000);
+                float dist = Tools::distance(n.pos_at_ti, n.pos_at_ti1);
+                float d = interval_elapsed * dist / interval;
+
+                n.pos = Tools::pointOnLineSegmentInGivenDirection(n.pos_at_ti, n.pos_at_ti1, d );
+
                 for(AlgModel* alg : input->algos)
                 {
                     n.updateRangeAt(alg->alg, sim_time/1000, interval_elapsed/1000);
                 }
             }
-            cout << "---" << endl;
 
             emit render();
 
-            QThread::msleep(1000);
+            QThread::msleep(400);
 
-            interval_elapsed += 500;
-            sim_time +=500;
+            const int advanced = 200;
+            interval_elapsed += advanced;
+            sim_time +=advanced;
 
             if(is_drawing)
             {
                 for(AlgModel* alg : input->algos)
-                    emit addData(MAX_RANGE, alg->alg, sim_time/1000,
+                    emit addData(MAX_RANGE, alg->alg, (sim_time-advanced)/1000,
                                  getMax(input->nodes, alg->alg)/1000);
                                  //input->nodes[input->getSourceIndex()].currentRange(alg->alg));
                 for(AlgModel* alg : input->algos)
-                    emit addData(TOTAL_SUM_RANGE, alg->alg, sim_time/1000,
+                    emit addData(TOTAL_SUM_RANGE, alg->alg, (sim_time-advanced)/1000,
                                  getTotal(input->nodes, alg->alg)/1000);
                 for(AlgModel* alg : input->algos)
-                    emit addData(AVG_RANGE, alg->alg, sim_time/1000,
+                    emit addData(AVG_RANGE, alg->alg, (sim_time-advanced)/1000,
                                  getAvg(input->nodes, alg->alg)/1000);
             }
         }
         //ToDo : if "stop" pressed -> stops after current interval is processed
         qApp->processEvents();
 
-        for(Node& n : input->nodes)
-        {
-            n.direction.first = n.direction.second;
-            n.direction.second = n.pos;
-        }
 
         if(!is_running)
             break;

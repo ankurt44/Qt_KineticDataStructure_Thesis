@@ -63,7 +63,8 @@ void RenderArea::paintNode(QPainter *painter, QPaintEvent *event, const Node& no
     painter->setPen(QPen(QBrush(Qt::green), 2));
     painter->setBrush(Qt::NoBrush);
     int  range = node.currentRange(input->selected_alg);
-    painter->drawEllipse(QPoint(node.pos.x, node.pos.y), range, range); //ToDo : center and radius are not accurate (not in float)
+    painter->drawEllipse(QPoint(node.pos.x, node.pos.y), range, range);
+    //ToDo : center and radius are not accurate (not in float)
 
     painter->setPen(QPen(QBrush(Qt::blue), 2));
     painter->setBrush(Qt::NoBrush);
@@ -74,26 +75,48 @@ void RenderArea::paintNode(QPainter *painter, QPaintEvent *event, const Node& no
 
 void RenderArea::testPaint(QPainter* painter, QPaintEvent *event)
 {
+    /*intersection segment-circle algorithm check
+    Vector2f v1(100,100); Vector2f v2(400,400); Vector2f p(300,300);
+    float r = 141.42;
+
+    //cout << Tools::distance(p, v2) << endl;
+
+    painter->setPen(QPen(QBrush(Qt::blue), 3));
+    painter->setBrush(Qt::NoBrush);
+    painter->drawPoint(v1.x, v1.y);
+    painter->drawPoint(v2.x, v2.y);
+    painter->drawLine(v1.x, v1.y, v2.x, v2.y);
+    painter->drawPoint(p.x, p.y);
+    painter->setPen(QPen(QBrush(Qt::red), 2));
+    painter->setBrush(Qt::NoBrush);
+    painter->drawEllipse(QPoint(p.x, p.y), (int)r, (int)r);
+    vector<Vector2f> points = Tools::circleIntersectLine(p,r,v1,v2);
+    painter->setPen(QPen(QBrush(Qt::black), 8));
+    painter->setBrush(Qt::NoBrush);
+    for(Vector2f& v : points)
+        painter->drawPoint(v.x, v.y);
+    */
+
     //painter->drawPoint(node.pos.x, node.pos.y);
     //painter->drawLine(node.x, node.y, 200, 200);
-
-    Node node1(Vector2f(100, 200));
-    Node node2(Vector2f(400, 500));
-    Node node3(Vector2f(600, 400));
-    Node node4(Vector2f(950, 250));
-    Node node14(Vector2f(150, 670));
-    Node node5(Vector2f(50, 50));
-    Node node6(Vector2f(300, 200));
-    Node node7(Vector2f(150, 550));
-    Node node8(Vector2f(250, 50));
-    Node node9(Vector2f(850, 150));
-    Node node10(Vector2f(900, 550));
+    /*
+    Node node1(Vector2f(0, 0), Vector2f(100, 300));
+    Node node2(Vector2f(0, 0), Vector2f(400, 300));
+    Node node3(Vector2f(0, 0), Vector2f(600, 400));
+    Node node4(Vector2f(0, 0), Vector2f(950, 250));
+    Node node14(Vector2f(0, 0), Vector2f(150, 670));
+    Node node5(Vector2f(0, 0), Vector2f(50, 50));
+    Node node6(Vector2f(0, 0), Vector2f(300, 200));
+    Node node7(Vector2f(0, 0), Vector2f(150, 550));
+    Node node8(Vector2f(0, 0), Vector2f(250, 50));
+    Node node9(Vector2f(0, 0), Vector2f(850, 150));
+    Node node10(Vector2f(0, 0), Vector2f(900, 550));
     //node2.alg_range.insert(make_pair(VORONOI_PREV, vector<pair<float, float> >()));
     //node2.alg_range.find(VORONOI_PREV)->second.push_back(make_pair(0,350));
     vector<Node> nodes;
     nodes.push_back(node1);
     nodes.push_back(node2);
-    /*
+
     nodes.push_back(node3);
     nodes.push_back(node4);
     nodes.push_back(node5);
@@ -103,16 +126,17 @@ void RenderArea::testPaint(QPainter* painter, QPaintEvent *event)
     nodes.push_back(node9);
     nodes.push_back(node10);
     nodes.push_back(node14);
-    */
+
 
     AlgVoronoi a;
     a.voronoiDiagram(nodes);
 
-    painter->setPen(QPen(QBrush(Qt::red), 4));
-    painter->setBrush(QBrush(Qt::red));
 
     for(Node n : nodes)
     {
+
+        painter->setPen(QPen(QBrush(Qt::red), 4));
+        painter->setBrush(QBrush(Qt::red));
         painter->drawPoint(n.pos.x, n.pos.y);
 
         painter->setPen(QPen(QBrush(Qt::green), 2));
@@ -124,14 +148,18 @@ void RenderArea::testPaint(QPainter* painter, QPaintEvent *event)
         VoronoiCell c1 = n.cell;
         for(auto it = c1.left.begin(); it != c1.left.end()-1; it++)
         {
+            painter->setPen(QPen(QBrush(Qt::green), 2));
+            painter->setBrush(Qt::NoBrush);
             painter->drawLine(it->x, it->y, (it+1)->x, (it+1)->y);
         }
         for(auto it = c1.right.begin(); it != c1.right.end()-1; it++)
         {
+            painter->setPen(QPen(QBrush(Qt::blue), 4));
+            painter->setBrush(Qt::NoBrush);
             painter->drawLine(it->x, it->y, (it+1)->x, (it+1)->y);
         }
     }
-
+    */
 
 }
 

@@ -2,12 +2,11 @@
 #include <QApplication>
 
 #include <iostream>
+#include <vector>
 
 #include "tools.h"
 #include "voronoicell.h"
 #include "algorithm.h"
-
-void test();
 
 int main(int argc, char *argv[])
 {
@@ -19,27 +18,21 @@ int main(int argc, char *argv[])
     return a.exec();
 }
 
+/*
+ *    vector<int> av;
+    av.push_back(1);
+    av.push_back(2);
+    av.push_back(3);
 
-void test()
-{
-    vector<Vector2f> vec;
-    vec.push_back(Vector2f(5000, -4700));
-    vec.push_back(Vector2f(-4700, 5000));
-    vec.push_back(Vector2f(5000, 5000));
+    vector<int> bv;
+    av.push_back(8);
+    av.push_back(6);
+    av.push_back(4);
 
-    sort(vec.begin(), vec.end());
+    vector<int> res = av;
+    res.insert(res.begin(),bv.begin(), bv.end());
 
-    Node node1(Vector2f(20,20));
-    Node node2(Vector2f(10,10));
-    Node node3(Vector2f(-10,-10));
-    Node node4(Vector2f(20,30));
-
-    vector<Node> nodes;
-    nodes.reserve(4);
-    nodes.push_back(node1);
-    nodes.push_back(node2);
-    nodes.push_back(node3);
-    nodes.push_back(node4);
-
-    //Algorithm::broadcastTree(nodes, 1);
-}
+    for(int i : res)
+        cout << i << "-";
+    cout << endl;
+ */

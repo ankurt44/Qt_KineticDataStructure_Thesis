@@ -17,8 +17,8 @@ public:
 
 
     //ToDo : register movement model
-    void (*nextRandomPosition)(Vector2f& curr_pos, pair<Vector2f,Vector2f>& direction,
-                               float direction_factor, double speed, double dt);
+    void (*nextRandomPosition)(Vector2f &pos_at_t, Vector2f &pos_at_t1, float direction_factor, double speed,
+                               float speed_factor, double dt);
 
     //ToDo : register algorithms
     vector<AlgModel*> algos;
