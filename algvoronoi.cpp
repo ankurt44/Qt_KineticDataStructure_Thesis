@@ -17,11 +17,11 @@ void AlgVoronoi::execute(vector<Node>& nodes, float m_interval_start, float m_in
     map<int, vector<pair<float, float> > > node_interpolation;
 
     float interval = (m_interval_end - m_interval_start)/1000;
+    float increment = interval/time_gap;
 
     cout << "started voronoi algorithm" <<endl;
     for(int i = 0; i < nodes.size(); i++)
     {
-        //cout << i << endl;
         if(nodes[i].order == 0)
             continue;
 
@@ -32,13 +32,11 @@ void AlgVoronoi::execute(vector<Node>& nodes, float m_interval_start, float m_in
 
         voronoiDiagram(resp_nodes);
 
-        Vector2f temp = nodes[i].pos;
+        //Vector2f temp = nodes[i].pos;
         for(int r = 0; r < resp_nodes.size(); r++)
         {
-            for(float t = 0; t <= interval; t = t + (interval/time_gap))
+            for(float t = 0; t < (float)interval+increment; t = t + increment)
             {
-                cout << t << " " << interval << " " << interval/time_gap << endl;
-                //ToDo : check to return further point on circle
                 vector<Vector2f> points = getPointsInCircle(resp_nodes[r].pos, resp_nodes[r].cell,
                                                             nodes[i].pos_at_ti, nodes[i].velocity*t);
 
@@ -60,12 +58,15 @@ void AlgVoronoi::execute(vector<Node>& nodes, float m_interval_start, float m_in
     for(int i = 0; i < nodes.size(); i++)
     {
         vector<pair<float, float> > interpolation;
-        for(float t = 0; t <= interval; t+=(interval/time_gap))
+        for(float t = 0; t < (float)interval+increment; t= t + increment)
         {
             map<float, vector<float> > time_ranges = ranges[i];
             vector<float> rs = time_ranges[t];
             if(rs.size() == 0)
+            {
+                interpolation.push_back(make_pair(t, 0));
                 continue;       //ToDO : check if continue required
+            }
 
             float range = *std::max_element(rs.begin(), rs.end(), comp);
             interpolation.push_back(make_pair(t,range));

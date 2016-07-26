@@ -15,11 +15,12 @@ public:
 
 public:
     InputWidget(QWidget* parent = 0);
-
 public slots:
     void createInput(Input& input);
 
 private:
+
+    void createNodes(Input* input, int num, float velocity_max);
     void createUI();
     void appearance(float r, float g, float b, float a);
 

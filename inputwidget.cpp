@@ -30,6 +30,26 @@ void InputWidget::createInput(Input& input)
     input.nodes.reserve(num);
     input.interval_length = interval_length;
 
+    createNodes(&input, num, velocity_max);
+
+    //add movement model
+    input.direction_factor = txt_direction->text().toInt();
+    input.nextRandomPosition = Tools::nextAvailablePosition;
+
+    //add algorithms
+    input.algos.push_back(new AlgBroadcastInterpolate);
+    input.selected_alg = VORONOI_PREV;
+    input.algos.push_back(new AlgBroadcastDirect);
+    input.algos.push_back(new AlgVoronoi);
+}
+
+void InputWidget::createNodes(Input* input, int num, float velocity_max)
+{
+    /*
+    input->nodes.push_back(Node(Vector2f(0, 0), Vector2f(50, 50), velocity_max));
+    input->nodes.push_back(Node(Vector2f(5, 5), Vector2f(70, 100), velocity_max));
+    input->nodes.push_back(Node(Vector2f(0, 20), Vector2f(100, 50), velocity_max));
+    */
     for(int i = 0; i < num; i++)
     {
         float _xt = (float) Tools::randomnum(100, 800);
@@ -38,22 +58,14 @@ void InputWidget::createInput(Input& input)
         float _xt1 = (float) Tools::randomnum(100, 800);
         float _yt1 = (float) Tools::randomnum(100, 600);
 
-        input.nodes.push_back(Node(Vector2f(_xt, _yt), Vector2f(_xt1, _yt1), velocity_max));
+        input->nodes.push_back(Node(Vector2f(_xt, _yt), Vector2f(_xt1, _yt1), velocity_max));
         //TODO : check if a node is created with same x and y
         //ToDo : randomly assign velocity in the start [0, vmax]
     }
 
-    input.setSource(Tools::randomnum(0, input.nodes.size()-1));
+    input->setSource(Tools::randomnum(0, input->nodes.size()-1));
 
-    //add movement model
-    input.direction_factor = txt_direction->text().toInt();
-    input.nextRandomPosition = Tools::nextAvailablePosition;
-
-    //add algorithms
-    input.algos.push_back(new AlgBroadcastInterpolate);
-    input.selected_alg = NORMAL_INTERPOLATION;
-    input.algos.push_back(new AlgBroadcastDirect);
-    //input.algos.push_back(new AlgVoronoi);
+    //input->setSource(0);
 }
 
 void InputWidget::createUI()

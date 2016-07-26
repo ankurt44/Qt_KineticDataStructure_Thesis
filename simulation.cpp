@@ -73,7 +73,7 @@ void Simulation::start()
 
             emit render();
 
-            QThread::msleep(400);
+            QThread::msleep(500);
 
             const int advanced = 200;
             interval_elapsed += advanced;
