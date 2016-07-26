@@ -5,45 +5,79 @@ AlgVoronoi::AlgVoronoi(ALG_VARIANT _alg)
 {
     alg = _alg;
     graph_color = Qt::green;
+    time_gap = 10;
 }
 
-void AlgVoronoi::execute(vector<Node>& nodes, float m_interval_start, float m_interval_end)
+bool comp(float, float); //used to get max element in vector
+
+void AlgVoronoi::execute(vector<Node>& nodes, float m_interval_start, float m_interval_end, float m_passed_time)
 {
-    map<int, vector<vector<pair<float, float> > > > node_inter;
+    //  node     time   |range values|
+    map<int, map<float, vector<float> > > ranges;
+    map<int, vector<pair<float, float> > > node_interpolation;
+
     float interval = (m_interval_end - m_interval_start)/1000;
 
+    cout << "started voronoi algorithm" <<endl;
     for(int i = 0; i < nodes.size(); i++)
     {
-        vector<int> prev_nodes_index = getResponsibleNodes(nodes, i);
-        //assert(!(nodes[i].order != 0) || prev_nodes_index.size() != 0 && "non-source node has no responsible nodes : AlgVoronoi");
-
+        //cout << i << endl;
         if(nodes[i].order == 0)
             continue;
 
-        vector<Node> prev_nodes;
-        prev_nodes.clear();
+        vector<int> resp_nodes_i = getResponsibleNodes(nodes, i);
+        vector<Node> resp_nodes;
+        for(int r : resp_nodes_i)
+            resp_nodes.push_back(nodes[r]);
 
-        for(int j : prev_nodes_index)
+        voronoiDiagram(resp_nodes);
+
+        Vector2f temp = nodes[i].pos;
+        for(int r = 0; r < resp_nodes.size(); r++)
         {
-            prev_nodes.push_back(nodes[j]);
+            for(float t = 0; t <= interval; t = t + (interval/time_gap))
+            {
+                cout << t << " " << interval << " " << interval/time_gap << endl;
+                //ToDo : check to return further point on circle
+                vector<Vector2f> points = getPointsInCircle(resp_nodes[r].pos, resp_nodes[r].cell,
+                                                            nodes[i].pos_at_ti, nodes[i].velocity*t);
+
+                float max_range = 0;
+                for(Vector2f& p : points)
+                {
+                    Vector2f temp = Tools::farthestPosInTime(resp_nodes[r].pos, p, resp_nodes[r].velocity, t);
+                    float d = Tools::distance(p, temp);
+                    if(d > max_range) max_range = d;
+                }
+
+                ranges[resp_nodes_i[r]][t].push_back(max_range);
+            }
         }
 
-        voronoiDiagram(prev_nodes);
-
-        for(Node& n : prev_nodes)
-        {
-            vector<Vector2f> points_in_circle = this->getPointsInCircle(n.cell, n.pos_at_ti, n.velocity*interval);
-
-
-
-        }
-        //nodes[i].addInterpolation(this->alg, getInterpolation(prev_nodes, nodes[i]));
     }
-    for(int i = 1; i < nodes.size(); i++)
+
+    cout << "interpolation voronoi algorithm" <<endl;
+    for(int i = 0; i < nodes.size(); i++)
     {
+        vector<pair<float, float> > interpolation;
+        for(float t = 0; t <= interval; t+=(interval/time_gap))
+        {
+            map<float, vector<float> > time_ranges = ranges[i];
+            vector<float> rs = time_ranges[t];
+            if(rs.size() == 0)
+                continue;       //ToDO : check if continue required
 
+            float range = *std::max_element(rs.begin(), rs.end(), comp);
+            interpolation.push_back(make_pair(t,range));
+        }
+
+        nodes[i].addInterpolation(this->alg, interpolation);
     }
+
+    cout << "done voronoi algorithm" <<endl;
 }
+
+bool comp(float a, float b){return a < b;}
 
 vector<int> AlgVoronoi::getResponsibleNodes(const vector<Node>& _nodes, int _curr_node)
 {
@@ -56,7 +90,9 @@ vector<int> AlgVoronoi::getResponsibleNodes(const vector<Node>& _nodes, int _cur
     return prev_nodes;
 }
 
-vector<Vector2f> AlgVoronoi::getPointsInCircle(const VoronoiCell& cell, Vector2f& center, float radius)
+vector<Vector2f> AlgVoronoi::getPointsInCircle(const Vector2f& point,
+                                               const VoronoiCell& cell,
+                                               Vector2f& center, float radius)
 {
     vector<Vector2f> points;
     points.clear();
@@ -65,6 +101,24 @@ vector<Vector2f> AlgVoronoi::getPointsInCircle(const VoronoiCell& cell, Vector2f
         points.push_back(cell.right[i]);
 
     vector<Vector2f> in_circle_points;
+
+    //1 if the circle remains inside the cell
+    //  the range is the distance from the tangent point on circle
+    //  only applies for the cell containing the tangent_point at any time....
+    //  if the cell doesnt contain the center-> then it can never contain the tangent point as it goes farther from cell with t
+    float d_ = Tools::distance(point, center) + radius; //used to get the tangent point on circle
+                                                        //in the direction of line connecting
+                                                        //point and center
+    Vector2f tangent_point = Tools::pointOnLineSegmentInGivenDirection(point, center, d_);
+
+    if(Tools::ifPointInsideConvexHull(points, tangent_point))
+    {
+       in_circle_points.push_back(tangent_point);
+       return in_circle_points;
+    }
+
+    //2 if the tangent point is outside the cell
+    //  the range is farthest intersection points (or points in side circle)
     for(int i = 0; i < points.size(); i++)
     {
         if(Tools::lieInCircle(points[i], center, radius))
@@ -97,7 +151,16 @@ void AlgVoronoi::voronoiDiagram(vector<Node>& nodes)
         return;
     if(nodes.size() == 1)
     {
-
+        vector<Vector2f> c;
+        c.push_back(Vector2f(LEFT_X, TOP_Y));
+        c.push_back(Vector2f(LEFT_X, BOTTOM_Y));
+        c.push_back(Vector2f(RIGHT_X, TOP_Y));
+        c.push_back(Vector2f(RIGHT_X, BOTTOM_Y));
+        VoronoiCell* cell = NULL;
+        convertToVoronoiCell(c, cell);
+        nodes[0].cell = *cell;
+        delete cell;
+        return;
     }
 
     for(int i = 0; i < nodes.size(); i++)

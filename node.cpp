@@ -90,7 +90,10 @@ float Node::getRangeAt(ALG_VARIANT _alg, float _time)
     if(i.size() == 0)
         return 0.0f;
     else
+    {
+
         assert(i[0].first <= _time && _time <= i[i.size()-1].first && "=>assert to check if argument falls within interval");
+    }
 
     for(int j = 0; j < i.size()-1; j++)
     {

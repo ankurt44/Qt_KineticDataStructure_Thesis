@@ -9,7 +9,7 @@ public:
 
     AlgVoronoi(ALG_VARIANT _alg = VORONOI_PREV);
 
-    virtual void execute(vector<Node>& nodes, float m_interval_start, float m_interval_end) override;
+    virtual void execute(vector<Node>& nodes, float m_interval_start, float m_interval_end, float m_passed_time) override;
 
      void voronoiDiagram(vector<Node>& nodes);
 
@@ -26,7 +26,9 @@ public:
 private:
     vector<int> getResponsibleNodes(const vector<Node>& _nodes, int _curr_node);
 
-    vector<Vector2f> getPointsInCircle(const VoronoiCell& cell, Vector2f& center, float radius);
+    vector<Vector2f> getPointsInCircle(const Vector2f &point, const VoronoiCell& cell, Vector2f& center, float radius);
+
+    float time_gap;
 };
 
 

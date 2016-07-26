@@ -40,6 +40,8 @@ public:
     //pointOnSegment = true if the intersection points must lie on the segment
     static vector<Vector2f> circleIntersectLine(Vector2f &center, float radius, Vector2f &a, Vector2f &b, bool pointOnSegment = true);
     static bool checkIfPointOnSegment(Vector2f &v1, Vector2f &v2, Vector2f &p);
+    static bool ifPointInsideConvexHull(const vector<Vector2f> &hull, const Vector2f &point);
+    static Vector2f farthestPosInTime(const Vector2f &curr, const Vector2f &p, float speed, float time);
 private:
     Tools() = default;
 };

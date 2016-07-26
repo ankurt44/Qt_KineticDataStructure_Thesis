@@ -53,7 +53,7 @@ void Simulation::start()
 
         for(AlgModel* alg : input->algos)
         {
-            alg->execute(input->nodes, 0.0, interval);
+            alg->execute(input->nodes, 0.0, interval, sim_time);
         }
 
         while(interval - interval_elapsed >= 0) //runs for given time interval
@@ -81,16 +81,17 @@ void Simulation::start()
 
             if(is_drawing)
             {
-                for(AlgModel* alg : input->algos)
+                for(AlgModel* alg : input->algos){
                     emit addData(MAX_RANGE, alg->alg, (sim_time-advanced)/1000,
                                  getMax(input->nodes, alg->alg)/1000);
                                  //input->nodes[input->getSourceIndex()].currentRange(alg->alg));
-                for(AlgModel* alg : input->algos)
+                //for(AlgModel* alg : input->algos)
                     emit addData(TOTAL_SUM_RANGE, alg->alg, (sim_time-advanced)/1000,
                                  getTotal(input->nodes, alg->alg)/1000);
-                for(AlgModel* alg : input->algos)
+                //for(AlgModel* alg : input->algos)
                     emit addData(AVG_RANGE, alg->alg, (sim_time-advanced)/1000,
                                  getAvg(input->nodes, alg->alg)/1000);
+                }
             }
         }
         //ToDo : if "stop" pressed -> stops after current interval is processed

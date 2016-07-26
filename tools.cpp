@@ -112,6 +112,23 @@ Vector2f Tools::pointOnLineSegmentInGivenDirection(const Vector2f& v0, const Vec
     return v;
 }
 
+bool Tools::ifPointInsideConvexHull(const vector<Vector2f>& hull, const Vector2f& point)
+{
+    //ToDo : low priority... can make an enum of sign +/0/-
+    int sign = Tools::sign(Tools::crossProduct2D(hull[1]-hull[0], point - hull[0]));
+
+    for(int i = 1; i < hull.size()-1; i++) //loop over edges
+    {
+        int sign_ = Tools::sign(Tools::crossProduct2D(hull[i+1]-hull[i], point - hull[i]));
+        if(sign_ == sign || sign_ == 0)
+            continue;
+
+        return false;
+    }
+
+    return true;
+}
+
 Vector2f Tools::rotateAbout(const Vector2f& pivot, double angle_rad, const Vector2f& point)
 {
     float s = sin(angle_rad);
@@ -333,4 +350,12 @@ bool Tools::intersectionPoint(const Vector2f& v1, const Vector2f& v2, const Vect
 double Tools::slopeOfLine(const Vector2f& v1, const Vector2f& v2)
 {
     return ((double)v2.y - (double)v1.y)/((double)v2.x - (double)v1.x);
+}
+
+Vector2f Tools::farthestPosInTime(const Vector2f& curr, const Vector2f& p, float speed, float time)
+{
+    float d_ = Tools::distance(p, curr);
+    d_ += speed*time;
+    Vector2f res = Tools::pointOnLineSegmentInGivenDirection(p, curr, d_);
+    return res;
 }

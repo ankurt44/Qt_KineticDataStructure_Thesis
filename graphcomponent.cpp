@@ -42,7 +42,7 @@ void GraphComponent::addGraphData(ALG_VARIANT _alg, double key, double value)
         it->second->addData(key, value);
         graphs[_alg]->rescaleValueAxis(true);
         //QCustomPlot::yAxis->setRange(value+2,500 ,Qt::AlignTop);
-        QCustomPlot::xAxis->setRange(key+1 ,60 ,Qt::AlignRight);
+        QCustomPlot::xAxis->setRange(key+1 ,40 ,Qt::AlignRight);
         QCustomPlot::replot();
     }
 }

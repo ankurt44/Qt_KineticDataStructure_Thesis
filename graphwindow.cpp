@@ -35,15 +35,15 @@ GraphWindow::GraphWindow(QWidget *parent)
     graph_total_range->setFixedSize(GRAPH_WIDTH,GRAPH_HEIGHT);
     graph_components.insert(make_pair(TOTAL_SUM_RANGE, graph_total_range));
 
-    GraphComponent* graph_median_range = new GraphComponent(this);
-    graph_median_range->setFixedSize(GRAPH_WIDTH,GRAPH_HEIGHT);
-    graph_components.insert(make_pair(MEDIAN_RANGE, graph_median_range));
+    //GraphComponent* graph_median_range = new GraphComponent(this);
+    //graph_median_range->setFixedSize(GRAPH_WIDTH,GRAPH_HEIGHT);
+    //graph_components.insert(make_pair(MEDIAN_RANGE, graph_median_range));
 
     controls_layout_1->addWidget(graph_max_range);
     controls_layout_1->addWidget(graph_avg_range);
 
     controls_layout_2->addWidget(graph_total_range);
-    controls_layout_2->addWidget(graph_median_range);
+    //controls_layout_2->addWidget(graph_median_range);
     
     controls_vertical->addWidget(h_group_box);
     controls_vertical->addWidget(h_group_box_2);
