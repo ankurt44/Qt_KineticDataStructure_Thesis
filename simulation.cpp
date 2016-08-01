@@ -1,6 +1,7 @@
 #include <QApplication>
 #include <QThread>
 #include <QTime>
+#include <assert.h>
 
 #include "simulation.h"
 #include "algorithm.h"
@@ -20,8 +21,11 @@ void Simulation::connectSignalSlot()
     qRegisterMetaType<GRAPHS>("GRAPHS");
     qRegisterMetaType<ALG_VARIANT>("ALG_VARIANT");
     qRegisterMetaType<Qt::GlobalColor>("Qt::GlobalColor");
-    connect(this, SIGNAL(addGraph(GRAPHS, ALG_VARIANT, Qt::GlobalColor, QCPAxis*, QCPAxis*)),
-            graph_win, SLOT(addGraph(GRAPHS,ALG_VARIANT, Qt::GlobalColor, QCPAxis*, QCPAxis*)));
+    qRegisterMetaType<std::string>("string");
+    //connect(this, SIGNAL(addGraph(GRAPHS,ALG_VARIANT,Qt::GlobalColor,string,QCPAxis*,QCPAxis*))
+
+    connect(this, SIGNAL(addGraph(GRAPHS, ALG_VARIANT, Qt::GlobalColor, string, QCPAxis*, QCPAxis*)),
+            graph_win, SLOT(addGraph(GRAPHS,ALG_VARIANT, Qt::GlobalColor, string, QCPAxis*, QCPAxis*)));
     connect(this, SIGNAL(addData(GRAPHS,ALG_VARIANT,double,double)),
             graph_win, SLOT(addGraphData(GRAPHS,ALG_VARIANT,double,double)));
 }
@@ -38,11 +42,16 @@ void Simulation::start()
     while(is_running)
     {
         interval_elapsed = 0.0;
-
+        cout << "next interval" << endl;
         for(Node& n : input->nodes)
         {
+            //cout << n.pos << " - " ;
+            //cout << n.pos_at_ti << " - " ;
             input->nextRandomPosition(n.pos_at_ti, n.pos_at_ti1, input->direction_factor, n.velocity,
                                       n.velocity, interval/1000);
+
+            //cout << n.pos << " - " ;
+            //cout << n.pos_at_ti << endl;
         }
 
         emit render();
@@ -55,16 +64,17 @@ void Simulation::start()
         {
             alg->execute(input->nodes, 0.0, interval, sim_time);
         }
-
         while(interval - interval_elapsed >= 0) //runs for given time interval
         {
             for(Node& n : input->nodes)
             {
                 float dist = Tools::distance(n.pos_at_ti, n.pos_at_ti1);
                 float d = interval_elapsed * dist / interval;
+                assert(d>=0 && "distance between two position in simulation cpp");
 
+                //cout << n.pos << "-" << n.pos_at_ti << "-" <<n.pos_at_ti1 << " " << (n.pos_at_ti == n.pos_at_ti1) << endl;
                 n.pos = Tools::pointOnLineSegmentInGivenDirection(n.pos_at_ti, n.pos_at_ti1, d );
-
+                //cout << n.pos << "-" << n.pos_at_ti << "-" <<n.pos_at_ti1  << " " << (n.pos_at_ti == n.pos_at_ti1)<< endl;
                 for(AlgModel* alg : input->algos)
                 {
                     n.updateRangeAt(alg->alg, sim_time/1000, interval_elapsed/1000);
@@ -250,16 +260,16 @@ void Simulation::startDrawing()
     is_drawing = true;
     for(AlgModel* alg : input->algos)
     {
-        emit addGraph(MAX_RANGE, alg->alg, alg->graph_color);
+        emit addGraph(MAX_RANGE, alg->alg, alg->graph_color, "energy (MAX)");
         //emit setData(MAX_RANGE, alg->alg, );
     }
     for(AlgModel* alg : input->algos)
     {
-        emit addGraph(TOTAL_SUM_RANGE, alg->alg, alg->graph_color);
+        emit addGraph(TOTAL_SUM_RANGE, alg->alg, alg->graph_color, "energy (TOTAL)");
     }
     for(AlgModel* alg : input->algos)
     {
-        emit addGraph(AVG_RANGE, alg->alg, alg->graph_color);
+        emit addGraph(AVG_RANGE, alg->alg, alg->graph_color, "energy (AVG)");
     }
 }
 

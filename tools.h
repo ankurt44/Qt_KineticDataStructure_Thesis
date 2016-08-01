@@ -41,7 +41,11 @@ public:
     static vector<Vector2f> circleIntersectLine(Vector2f &center, float radius, Vector2f &a, Vector2f &b, bool pointOnSegment = true);
     static bool checkIfPointOnSegment(Vector2f &v1, Vector2f &v2, Vector2f &p);
     static bool ifPointInsideConvexHull(const vector<Vector2f> &hull, const Vector2f &point);
-    static Vector2f farthestPosInTime(const Vector2f &curr, const Vector2f &p, float speed, float time);
+    static Vector2f farthestPosInTime(const Vector2f &curr, float speed, float time, const Vector2f &p);
+    static double lengthOfVector(const Vector2f &v);
+    static float angleBetweenVectorsInDegree(const Vector2f &v1, const Vector2f &v2);
+    static float toRadian(float angle);
+    static bool inArc(const Vector2f &center, const Vector2f &mid_arc_point, float radius, float angle, const Vector2f &point);
 private:
     Tools() = default;
 };

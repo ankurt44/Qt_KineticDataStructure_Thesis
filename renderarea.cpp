@@ -99,18 +99,19 @@ void RenderArea::testPaint(QPainter* painter, QPaintEvent *event)
 
     //painter->drawPoint(node.pos.x, node.pos.y);
     //painter->drawLine(node.x, node.y, 200, 200);
+
     /*
-    Node node1(Vector2f(0, 0), Vector2f(100, 300));
-    Node node2(Vector2f(0, 0), Vector2f(400, 300));
-    Node node3(Vector2f(0, 0), Vector2f(600, 400));
-    Node node4(Vector2f(0, 0), Vector2f(950, 250));
-    Node node14(Vector2f(0, 0), Vector2f(150, 670));
-    Node node5(Vector2f(0, 0), Vector2f(50, 50));
-    Node node6(Vector2f(0, 0), Vector2f(300, 200));
-    Node node7(Vector2f(0, 0), Vector2f(150, 550));
-    Node node8(Vector2f(0, 0), Vector2f(250, 50));
-    Node node9(Vector2f(0, 0), Vector2f(850, 150));
-    Node node10(Vector2f(0, 0), Vector2f(900, 550));
+    Node node1(Vector2f(100, 120), Vector2f(100, 300));
+    Node node2(Vector2f(320, 450), Vector2f(400, 300));
+    Node node3(Vector2f(230, 780), Vector2f(600, 400));
+    Node node4(Vector2f(450, 550), Vector2f(950, 250));
+    Node node14(Vector2f(450, 560), Vector2f(150, 670));
+    Node node5(Vector2f(340, 302), Vector2f(50, 50));
+    Node node6(Vector2f(670, 340), Vector2f(300, 200));
+    Node node7(Vector2f(340, 032), Vector2f(150, 550));
+    Node node8(Vector2f(650, 430), Vector2f(250, 50));
+    Node node9(Vector2f(450, 340), Vector2f(850, 150));
+    Node node10(Vector2f(240, 230), Vector2f(900, 550));
     //node2.alg_range.insert(make_pair(VORONOI_PREV, vector<pair<float, float> >()));
     //node2.alg_range.find(VORONOI_PREV)->second.push_back(make_pair(0,350));
     vector<Node> nodes;
@@ -125,7 +126,7 @@ void RenderArea::testPaint(QPainter* painter, QPaintEvent *event)
     nodes.push_back(node8);
     nodes.push_back(node9);
     nodes.push_back(node10);
-    nodes.push_back(node14);
+    //nodes.push_back(node14);
 
 
     AlgVoronoi a;

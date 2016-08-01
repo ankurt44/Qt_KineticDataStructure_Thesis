@@ -24,7 +24,8 @@ SOURCES += main.cpp\
     algvoronoi.cpp \
     graphwindow.cpp \
     qcustomplot.cpp \
-    graphcomponent.cpp
+    graphcomponent.cpp \
+    responsiblenodes.cpp
 
 HEADERS  += mainwindow.h \
     vector2f.h \
@@ -44,6 +45,7 @@ HEADERS  += mainwindow.h \
     algvoronoi.h \
     graphwindow.h \
     qcustomplot.h \
-    graphcomponent.h
+    graphcomponent.h \
+    responsiblenodes.h
 
 FORMS    += mainwindow.ui

@@ -8,7 +8,7 @@ GraphComponent::GraphComponent(QWidget *parent)
 
 }
 
-void GraphComponent::addGraph(ALG_VARIANT _alg, Qt::GlobalColor color, QCPAxis *keyAxis, QCPAxis *valueAxis)
+void GraphComponent::addGraph(ALG_VARIANT _alg, Qt::GlobalColor color, string vAxis, QCPAxis *keyAxis, QCPAxis *valueAxis)
 {
     if(graphs.find(_alg) != graphs.end())
     {
@@ -17,6 +17,8 @@ void GraphComponent::addGraph(ALG_VARIANT _alg, Qt::GlobalColor color, QCPAxis *
     }
 
     graphs.insert(std::make_pair(_alg, QCustomPlot::addGraph(keyAxis, valueAxis)));
+    QCustomPlot::xAxis->setLabel("time");
+    QCustomPlot::yAxis->setLabel(QString::fromStdString(vAxis));
     graphs.find(_alg)->second->setPen(QPen(color));
     graphs.find(_alg)->second->setLineStyle(QCPGraph::lsLine);
     //graphs.find(_alg)->second->setScatterStyle(QCPScatterStyle::ssDisc);

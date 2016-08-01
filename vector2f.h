@@ -24,7 +24,9 @@ public:
         return *this;
     }
 
-    bool operator==(const Vector2f& v) {return (x==v.x && y==v.y);}
+    //friend bool operator==(const Vector2f& v1, const Vector2f& v2) {return (v1.x==v2.x && v1.y==v2.y);}
+
+    bool operator==(const Vector2f& v) const {return (x==v.x && y==v.y);}
 
     friend bool operator>(const Vector2f& v1, const Vector2f& v2)
     {

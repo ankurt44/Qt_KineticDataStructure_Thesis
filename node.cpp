@@ -91,7 +91,6 @@ float Node::getRangeAt(ALG_VARIANT _alg, float _time)
         return 0.0f;
     else
     {
-
         assert(i[0].first <= _time && _time <= i[i.size()-1].first && "=>assert to check if argument falls within interval");
     }
 

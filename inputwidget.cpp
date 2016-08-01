@@ -8,6 +8,7 @@
 #include "algbroadcastinterpolate.h"
 #include "algbroadcastdirect.h"
 #include "algvoronoi.h"
+#include "responsiblenodes.h"
 
 InputWidget::InputWidget(QWidget* parent) : QWidget(parent)
 {
@@ -20,6 +21,7 @@ void InputWidget::createInput(Input& input)
     int num = txt_num->text().toInt();
     float interval_length = txt_interval->text().toInt();
     float velocity_max = txt_velocity->text().toInt();
+    float direction_factor = txt_direction->text().toInt();
 
     vector<Node>* nodes = new vector<Node>;
     nodes->reserve(num);
@@ -33,23 +35,21 @@ void InputWidget::createInput(Input& input)
     createNodes(&input, num, velocity_max);
 
     //add movement model
-    input.direction_factor = txt_direction->text().toInt();
+    input.direction_factor = direction_factor;
     input.nextRandomPosition = Tools::nextAvailablePosition;
 
     //add algorithms
     input.algos.push_back(new AlgBroadcastInterpolate);
-    input.selected_alg = VORONOI_PREV;
+    input.selected_alg = VORONOI_PREV_TWO;
     input.algos.push_back(new AlgBroadcastDirect);
-    input.algos.push_back(new AlgVoronoi);
+    input.algos.push_back(new AlgVoronoi(VORONOI_PREV, ResponsibleNodes::getAllSmallerOrder,
+                                         Qt::magenta, direction_factor));
+    input.algos.push_back(new AlgVoronoi(VORONOI_PREV_TWO, ResponsibleNodes::getTwoCloserNodes,//ResponsibleNodes::getAllSmallerOrder,
+                                         Qt::green, direction_factor));
 }
 
 void InputWidget::createNodes(Input* input, int num, float velocity_max)
 {
-    /*
-    input->nodes.push_back(Node(Vector2f(0, 0), Vector2f(50, 50), velocity_max));
-    input->nodes.push_back(Node(Vector2f(5, 5), Vector2f(70, 100), velocity_max));
-    input->nodes.push_back(Node(Vector2f(0, 20), Vector2f(100, 50), velocity_max));
-    */
     for(int i = 0; i < num; i++)
     {
         float _xt = (float) Tools::randomnum(100, 800);
@@ -64,8 +64,6 @@ void InputWidget::createNodes(Input* input, int num, float velocity_max)
     }
 
     input->setSource(Tools::randomnum(0, input->nodes.size()-1));
-
-    //input->setSource(0);
 }
 
 void InputWidget::createUI()

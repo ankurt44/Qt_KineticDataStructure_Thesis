@@ -17,7 +17,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    srand(time(0));
+    srand(100);
+    //srand(time(0));
 
     createUI();
     appearance();

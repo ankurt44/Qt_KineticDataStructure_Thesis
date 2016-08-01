@@ -1,4 +1,5 @@
 #include "tools.h"
+#include "constants.h"
 #include <math.h>
 
 
@@ -21,6 +22,7 @@ double Tools::randomnum(double min, double max)
 }
 
 //Not Used
+/*
 void Tools::nextRandomPosition(Vector2f& curr_pos, pair<Vector2f,Vector2f>& direction,
                                float direction_factor, double speed, double dt)
 {
@@ -54,6 +56,7 @@ void Tools::nextRandomPosition(Vector2f& curr_pos, pair<Vector2f,Vector2f>& dire
     curr_pos.x += disp_x_max;
     curr_pos.y += disp_y_max;
 }
+*/
 
 void Tools::nextAvailablePosition(Vector2f &pos_at_t, Vector2f &pos_at_t1, float direction_factor, double speed,
                                   float speed_factor, double dt)
@@ -61,6 +64,8 @@ void Tools::nextAvailablePosition(Vector2f &pos_at_t, Vector2f &pos_at_t1, float
     double disp = speed * dt;
 
     disp = Tools::randomnum(0, disp);
+
+    Vector2f _pos_at_t1;
 
     double ang;
     if(pos_at_t == pos_at_t1)
@@ -71,9 +76,12 @@ void Tools::nextAvailablePosition(Vector2f &pos_at_t, Vector2f &pos_at_t1, float
         double disp_y = disp * (double) sin(ang_rad);
 
         pos_at_t = pos_at_t1;
-        pos_at_t1 = pos_at_t + Vector2f(disp_x, disp_y);
+        _pos_at_t1 = pos_at_t + Vector2f(disp_x, disp_y);
 
-        return;
+    }
+    else if(false)
+    {
+
     }
     else
     {
@@ -85,7 +93,7 @@ void Tools::nextAvailablePosition(Vector2f &pos_at_t, Vector2f &pos_at_t1, float
         ang = Tools::randomnum(-direction_factor, direction_factor);
         double ang_rad = ang * 2 * PI / 360;
 
-        pos_at_t1 = Tools::rotateAbout(pos_at_t, ang_rad, v_next);
+        _pos_at_t1 = Tools::rotateAbout(pos_at_t, ang_rad, v_next);
 
         /*
         ang = Tools::randomnum(-direction_factor, direction_factor);
@@ -102,10 +110,18 @@ void Tools::nextAvailablePosition(Vector2f &pos_at_t, Vector2f &pos_at_t1, float
         pos_at_t1 = pos_at_t + Vector2f(xnew, ynew);
         */
     }
+
+
+    //if()
+
+    pos_at_t1 = _pos_at_t1;
 }
 
 Vector2f Tools::pointOnLineSegmentInGivenDirection(const Vector2f& v0, const Vector2f& v1, float distance)
 {
+    if(v1 == v0)
+        return v0;
+
     Vector2f v = v1 - v0;
     v = v/sqrt(v.x*v.x + v.y*v.y);
     v = v0 + (v * distance);
@@ -150,12 +166,60 @@ Vector2f Tools::rotateAbout(const Vector2f& pivot, double angle_rad, const Vecto
 //dot product of vectors wrt origin
 double Tools::dotProduct(const Vector2f& v1, const Vector2f& v2)
 {
-    return v1.x*v2.x + v1.y+v2.y;
+    return v1.x*v2.x + v1.y*v2.y;
 }
 
 float Tools::crossProduct2D(const Vector2f& v1, const Vector2f& v2)
 {
     return v1.x*v2.y - v1.y*v2.x;
+}
+
+double Tools::lengthOfVector(const Vector2f& v)
+{
+    return sqrt(v.x*v.x + v.y*v.y);
+}
+
+float Tools::toRadian(float angle)
+{
+    angle = (angle>360)? 360: angle; //Todo : subtract 360 untill you get less than 360
+    float ang_rad = angle * 2 * PI / 360;
+    return ang_rad;
+}
+
+float Tools::angleBetweenVectorsInDegree(const Vector2f& v1, const Vector2f& v2)
+{
+    double dot = Tools::dotProduct(v1, v2);
+    double v1len = Tools::lengthOfVector(v1);
+    double v2len = Tools::lengthOfVector(v2);
+    double angle = (double)dot/(v1len*v2len);
+
+    if(angle > 1) //temporary solution (angle becomes a little greater than 1 because of value precision)
+    {
+        double temp = angle - 1;
+        angle = angle - temp;
+    }
+
+    angle  = acos(angle) ;
+    angle = angle * 180/PI;
+
+    //cout << angle << endl;
+
+    return angle;
+}
+
+bool Tools::inArc(const Vector2f& center, const Vector2f& mid_arc_point, float radius, float angle, const Vector2f& point)
+{
+    if(Tools::distance(center, point) > radius)
+        return false;
+
+    float _angle = Tools::angleBetweenVectorsInDegree(point-center, mid_arc_point-center);
+
+    if(_angle >= -angle/2 && _angle <= angle/2)
+    {
+        return true;
+    }
+
+    return false;
 }
 
 int Tools::sign(float a)
@@ -352,7 +416,7 @@ double Tools::slopeOfLine(const Vector2f& v1, const Vector2f& v2)
     return ((double)v2.y - (double)v1.y)/((double)v2.x - (double)v1.x);
 }
 
-Vector2f Tools::farthestPosInTime(const Vector2f& curr, const Vector2f& p, float speed, float time)
+Vector2f Tools::farthestPosInTime(const Vector2f& curr, float speed, float time, const Vector2f& p)
 {
     float d_ = Tools::distance(p, curr);
     d_ += speed*time;

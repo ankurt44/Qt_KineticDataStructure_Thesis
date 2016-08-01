@@ -1,11 +1,14 @@
 #include<assert.h>
 #include "algvoronoi.h"
 
-AlgVoronoi::AlgVoronoi(ALG_VARIANT _alg)
+AlgVoronoi::AlgVoronoi(ALG_VARIANT _alg, vector<int> (*getResponsibleNodes)(const vector<Node> &, int),
+                       Qt::GlobalColor graph_color, float _direction_factor)
 {
     alg = _alg;
-    graph_color = Qt::green;
-    time_gap = 10;
+    this->graph_color = graph_color;
+    time_gap = 40;
+    direction_factor = _direction_factor;
+    this->getResponsibleNodes = getResponsibleNodes;
 }
 
 bool comp(float, float); //used to get max element in vector
@@ -37,13 +40,15 @@ void AlgVoronoi::execute(vector<Node>& nodes, float m_interval_start, float m_in
         {
             for(float t = 0; t < (float)interval+increment; t = t + increment)
             {
-                vector<Vector2f> points = getPointsInCircle(resp_nodes[r].pos, resp_nodes[r].cell,
-                                                            nodes[i].pos_at_ti, nodes[i].velocity*t);
+                vector<Vector2f> points = getPointsInArc(resp_nodes[r].pos, resp_nodes[r].cell,
+                                                            nodes[i].pos_at_ti,
+                                                            nodes[i].pos_at_ti1, direction_factor,
+                                                            nodes[i].velocity*t);
 
                 float max_range = 0;
                 for(Vector2f& p : points)
                 {
-                    Vector2f temp = Tools::farthestPosInTime(resp_nodes[r].pos, p, resp_nodes[r].velocity, t);
+                    Vector2f temp = Tools::farthestPosInTime(resp_nodes[r].pos, resp_nodes[r].velocity, t, p);
                     float d = Tools::distance(p, temp);
                     if(d > max_range) max_range = d;
                 }
@@ -58,10 +63,11 @@ void AlgVoronoi::execute(vector<Node>& nodes, float m_interval_start, float m_in
     for(int i = 0; i < nodes.size(); i++)
     {
         vector<pair<float, float> > interpolation;
+        map<float, vector<float> > time_ranges = ranges[i];
         for(float t = 0; t < (float)interval+increment; t= t + increment)
         {
-            map<float, vector<float> > time_ranges = ranges[i];
             vector<float> rs = time_ranges[t];
+
             if(rs.size() == 0)
             {
                 interpolation.push_back(make_pair(t, 0));
@@ -80,7 +86,7 @@ void AlgVoronoi::execute(vector<Node>& nodes, float m_interval_start, float m_in
 
 bool comp(float a, float b){return a < b;}
 
-vector<int> AlgVoronoi::getResponsibleNodes(const vector<Node>& _nodes, int _curr_node)
+/*vector<int> AlgVoronoi::getResponsibleNodes(const vector<Node>& _nodes, int _curr_node)
 {
     vector<int> prev_nodes;
     for(int i = 0; i < _nodes.size(); i++)
@@ -89,11 +95,11 @@ vector<int> AlgVoronoi::getResponsibleNodes(const vector<Node>& _nodes, int _cur
             prev_nodes.push_back(i);
     }
     return prev_nodes;
-}
+}*/
 
-vector<Vector2f> AlgVoronoi::getPointsInCircle(const Vector2f& point,
-                                               const VoronoiCell& cell,
-                                               Vector2f& center, float radius)
+vector<Vector2f> AlgVoronoi::getPointsInCircle(const Vector2f& point, const VoronoiCell& cell,
+                                               Vector2f& center, Vector2f& towards, float _direction_factor,
+                                               float radius)
 {
     vector<Vector2f> points;
     points.clear();
@@ -137,6 +143,94 @@ vector<Vector2f> AlgVoronoi::getPointsInCircle(const Vector2f& point,
     return in_circle_points;
 }
 
+
+vector<Vector2f> AlgVoronoi::getPointsInArc(const Vector2f& point, const VoronoiCell& cell,
+                                            Vector2f& center, Vector2f& towards, float _direction_factor,
+                                            float radius)
+{
+    vector<Vector2f> points;
+    points.clear();
+    points = cell.left;
+    for(int i = cell.right.size()-2; i >= 0; i--)
+        points.push_back(cell.right[i]);
+
+    vector<Vector2f> in_arc_points;
+    if(Tools::ifPointInsideConvexHull(points, center))
+    {
+        in_arc_points.push_back(center);
+    }
+
+    Vector2f mid_point_arc = Tools::pointOnLineSegmentInGivenDirection(center, towards, radius);
+    float df_rad = Tools::toRadian(direction_factor/2);
+    Vector2f arc_end_point1 = Tools::rotateAbout(center, df_rad, mid_point_arc);
+    Vector2f arc_end_point2 = Tools::rotateAbout(center, -df_rad, mid_point_arc);
+
+    //float tr = Tools::distance(mid_point_arc, center);
+    //tr = Tools::distance(arc_end_point1, center);
+    //tr = Tools::distance(arc_end_point2, center);
+    //get tangent point
+    float _d = Tools::distance(point, center) + radius;
+    Vector2f tangent_point = Tools::pointOnLineSegmentInGivenDirection(point, center, _d);
+
+    float angle = Tools::angleBetweenVectorsInDegree(tangent_point-center, towards-center);
+    //float angle1 = Tools::angleBetweenVectorsInDegree(tangent_point-center, mid_point_arc-center);
+    //cout << "angle " << angle << " angle " << angle1 << endl;
+
+    if(angle <= _direction_factor/2 && angle >= -_direction_factor/2)
+    {
+        if(Tools::ifPointInsideConvexHull(points, tangent_point))
+        {
+            in_arc_points.push_back(tangent_point);
+            return in_arc_points;
+        }
+    }
+    else
+    {
+        if(Tools::ifPointInsideConvexHull(points, arc_end_point1))
+        {
+            in_arc_points.push_back(arc_end_point1);
+        }
+        if(Tools::ifPointInsideConvexHull(points, arc_end_point2))
+        {
+            in_arc_points.push_back(arc_end_point2);
+        }
+    }
+
+
+    for(int i = 0; i < points.size(); i++)
+    {
+        if(Tools::inArc(center, mid_point_arc, radius, _direction_factor, points[i]))
+            in_arc_points.push_back(points[i]);
+
+        if(i == points.size()-1)
+            break;
+
+        vector<Vector2f> intersect_points;
+        intersect_points = Tools::circleIntersectLine(center, radius, points[i], points[i+1]);
+        for(Vector2f& p : intersect_points)
+        {
+            if(Tools::inArc(center, mid_point_arc, radius, _direction_factor, p))
+                in_arc_points.push_back(p);
+        }
+        Vector2f* temp;
+        if(Tools::intersectionPoint(points[i], points[i+1], center, arc_end_point1, temp))
+        {
+            in_arc_points.push_back(*temp);
+            delete temp;
+        }
+
+        if(Tools::intersectionPoint(points[i], points[i+1], center, arc_end_point2, temp))
+        {
+            in_arc_points.push_back(*temp);
+            delete temp;
+        }
+
+    }
+
+    return in_arc_points;
+
+}
+
 struct NextEventComparator
 {
     bool operator()(const std::pair<Vector2f, AlgVoronoi::SIDE>& s1, const std::pair<Vector2f, AlgVoronoi::SIDE>& s2)
@@ -170,10 +264,14 @@ void AlgVoronoi::voronoiDiagram(vector<Node>& nodes)
         {
             if(j == i)
                 continue;
+
             halfPlanes.push_back(AlgVoronoi::getHalfPlane(nodes[i], nodes[j]));
         }
         VoronoiCell* cell = NULL;
+
         AlgVoronoi::halfPlaneIntersection(halfPlanes, cell);
+
+        assert(cell != NULL && " no voronoi cell assigned");
         halfPlanes.clear();
         nodes[i].cell = *cell;
         delete cell;
@@ -239,6 +337,7 @@ VoronoiCell AlgVoronoi::getHalfPlane(Node &node1, Node &node2)
 
     VoronoiCell* cell;
     AlgVoronoi::convertToVoronoiCell(c, cell);
+    assert(cell != NULL && "cell is NULL in getHalfPlane method");
     VoronoiCell res = *cell;
     if(cell)
         delete cell;
@@ -264,7 +363,9 @@ void AlgVoronoi::halfPlaneIntersection(const vector<VoronoiCell> _half_planes, V
         vector<VoronoiCell> H2(_half_planes.begin()+mid, _half_planes.end());
         halfPlaneIntersection(H1, cell1);
         halfPlaneIntersection(H2, cell2);
+
         halfPlaneIntersection(*cell1, *cell2, cell);
+
         if(cell1) delete cell1;
         if(cell2) delete cell2;
         return;
@@ -376,8 +477,14 @@ void AlgVoronoi::halfPlaneIntersection(const VoronoiCell& v1, const VoronoiCell&
             break;
         }
 
-        delete left_c;
-        delete right_c;
+        if(left_c)
+        {
+            //cout << endl << *left_c << " " << left_c<< endl;
+            //delete left_c;
+        }
+        if(right_c){
+            //delete right_c;
+        }
     }
 
     AlgVoronoi::convertToVoronoiCell(c, cell);
