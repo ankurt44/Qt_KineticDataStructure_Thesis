@@ -52,14 +52,13 @@ const Node* Node::getFarChild()
     return far_child;
 }
 
-void Node::updateInitialRange(ALG_VARIANT _alg, float _time)
+float Node::getInitialRange(ALG_VARIANT _alg)
 {
-    if(alg_range.find(_alg) == alg_range.end())
-        alg_range.insert(make_pair(_alg, vector<pair<float, float> >()));
+    if(children.size() == 0)
+        return 0;
 
     float range = Tools::distance(this->pos, this->getFarChild()->pos);
-
-    alg_range.find(_alg)->second.push_back(make_pair(_time, range));
+    return range;
 }
 
 double Node::getPower(ALG_VARIANT _alg) const

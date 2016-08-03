@@ -45,13 +45,8 @@ void Simulation::start()
         cout << "next interval" << endl;
         for(Node& n : input->nodes)
         {
-            //cout << n.pos << " - " ;
-            //cout << n.pos_at_ti << " - " ;
             input->nextRandomPosition(n.pos_at_ti, n.pos_at_ti1, input->direction_factor, n.velocity,
                                       n.velocity, interval/1000);
-
-            //cout << n.pos << " - " ;
-            //cout << n.pos_at_ti << endl;
         }
 
         emit render();
@@ -72,9 +67,8 @@ void Simulation::start()
                 float d = interval_elapsed * dist / interval;
                 assert(d>=0 && "distance between two position in simulation cpp");
 
-                //cout << n.pos << "-" << n.pos_at_ti << "-" <<n.pos_at_ti1 << " " << (n.pos_at_ti == n.pos_at_ti1) << endl;
                 n.pos = Tools::pointOnLineSegmentInGivenDirection(n.pos_at_ti, n.pos_at_ti1, d );
-                //cout << n.pos << "-" << n.pos_at_ti << "-" <<n.pos_at_ti1  << " " << (n.pos_at_ti == n.pos_at_ti1)<< endl;
+
                 for(AlgModel* alg : input->algos)
                 {
                     n.updateRangeAt(alg->alg, sim_time/1000, interval_elapsed/1000);

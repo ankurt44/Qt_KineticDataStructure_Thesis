@@ -40,7 +40,7 @@ void InputWidget::createInput(Input& input)
 
     //add algorithms
     input.algos.push_back(new AlgBroadcastInterpolate);
-    input.selected_alg = VORONOI_PREV_TWO;
+    input.selected_alg = VORONOI_PREV;
     input.algos.push_back(new AlgBroadcastDirect);
     input.algos.push_back(new AlgVoronoi(VORONOI_PREV, ResponsibleNodes::getAllSmallerOrder,
                                          Qt::magenta, direction_factor));

@@ -33,7 +33,7 @@ public:
 
     const Node* getFarChild();
 
-    void updateInitialRange(ALG_VARIANT _alg, float _time);
+    float getInitialRange(ALG_VARIANT _alg);
 
     double getPower(ALG_VARIANT _alg) const;
 

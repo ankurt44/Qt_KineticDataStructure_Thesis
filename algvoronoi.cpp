@@ -6,7 +6,7 @@ AlgVoronoi::AlgVoronoi(ALG_VARIANT _alg, vector<int> (*getResponsibleNodes)(cons
 {
     alg = _alg;
     this->graph_color = graph_color;
-    time_gap = 40;
+    time_gap = 4;
     direction_factor = _direction_factor;
     this->getResponsibleNodes = getResponsibleNodes;
 }
@@ -33,13 +33,24 @@ void AlgVoronoi::execute(vector<Node>& nodes, float m_interval_start, float m_in
         for(int r : resp_nodes_i)
             resp_nodes.push_back(nodes[r]);
 
+        if(resp_nodes_i.size() > 1)
+            cout << endl;
+
         voronoiDiagram(resp_nodes);
 
-        //Vector2f temp = nodes[i].pos;
+        cout << "processing " << nodes[i].pos << endl;
         for(int r = 0; r < resp_nodes.size(); r++)
         {
+            cout << "resp node " << resp_nodes_i[r] << " and pos " << resp_nodes[r].pos << endl;
             for(float t = 0; t < (float)interval+increment; t = t + increment)
             {
+                cout << "resp node : " << resp_nodes_i[r] << endl;
+                for(Vector2f q : resp_nodes[r].cell.left)
+                    cout <<q << " : " ;
+                cout << "::" ;
+                for(Vector2f q : resp_nodes[r].cell.right)
+                    cout <<q << " : " ;
+                cout << endl;
                 vector<Vector2f> points = getPointsInArc(resp_nodes[r].pos, resp_nodes[r].cell,
                                                             nodes[i].pos_at_ti,
                                                             nodes[i].pos_at_ti1, direction_factor,
@@ -53,9 +64,14 @@ void AlgVoronoi::execute(vector<Node>& nodes, float m_interval_start, float m_in
                     if(d > max_range) max_range = d;
                 }
 
+                cout << i << " - " << t << " - " << resp_nodes_i[r] << " - " << max_range << endl;
+
                 ranges[resp_nodes_i[r]][t].push_back(max_range);
             }
         }
+        resp_nodes.clear();
+        resp_nodes_i.clear();
+        cout << endl << endl;
 
     }
 
@@ -85,17 +101,6 @@ void AlgVoronoi::execute(vector<Node>& nodes, float m_interval_start, float m_in
 }
 
 bool comp(float a, float b){return a < b;}
-
-/*vector<int> AlgVoronoi::getResponsibleNodes(const vector<Node>& _nodes, int _curr_node)
-{
-    vector<int> prev_nodes;
-    for(int i = 0; i < _nodes.size(); i++)
-    {
-        if(_nodes[i].order < _nodes[_curr_node].order)
-            prev_nodes.push_back(i);
-    }
-    return prev_nodes;
-}*/
 
 vector<Vector2f> AlgVoronoi::getPointsInCircle(const Vector2f& point, const VoronoiCell& cell,
                                                Vector2f& center, Vector2f& towards, float _direction_factor,
@@ -154,46 +159,54 @@ vector<Vector2f> AlgVoronoi::getPointsInArc(const Vector2f& point, const Voronoi
     for(int i = cell.right.size()-2; i >= 0; i--)
         points.push_back(cell.right[i]);
 
+    for(Vector2f v : points)
+        cout << v << " : " ;
+    cout << endl;
+
+    assert(cell.left.size()+cell.right.size() == points.size()+1);
+
     vector<Vector2f> in_arc_points;
     if(Tools::ifPointInsideConvexHull(points, center))
     {
         in_arc_points.push_back(center);
+        cout << "center " << center << endl;
+    }
+    else
+    {
+        cout << "dummy print in method getPointsInArc" << endl;
     }
 
     Vector2f mid_point_arc = Tools::pointOnLineSegmentInGivenDirection(center, towards, radius);
     float df_rad = Tools::toRadian(direction_factor/2);
     Vector2f arc_end_point1 = Tools::rotateAbout(center, df_rad, mid_point_arc);
     Vector2f arc_end_point2 = Tools::rotateAbout(center, -df_rad, mid_point_arc);
-
-    //float tr = Tools::distance(mid_point_arc, center);
-    //tr = Tools::distance(arc_end_point1, center);
-    //tr = Tools::distance(arc_end_point2, center);
     //get tangent point
     float _d = Tools::distance(point, center) + radius;
     Vector2f tangent_point = Tools::pointOnLineSegmentInGivenDirection(point, center, _d);
 
     float angle = Tools::angleBetweenVectorsInDegree(tangent_point-center, towards-center);
-    //float angle1 = Tools::angleBetweenVectorsInDegree(tangent_point-center, mid_point_arc-center);
-    //cout << "angle " << angle << " angle " << angle1 << endl;
 
-    if(angle <= _direction_factor/2 && angle >= -_direction_factor/2)
+    if(-_direction_factor/2 <= angle &&  angle <= _direction_factor/2)
     {
         if(Tools::ifPointInsideConvexHull(points, tangent_point))
         {
             in_arc_points.push_back(tangent_point);
+            cout << "tangent point " << tangent_point << endl;
             return in_arc_points;
         }
     }
-    else
+
+    if(Tools::ifPointInsideConvexHull(points, arc_end_point1))
     {
-        if(Tools::ifPointInsideConvexHull(points, arc_end_point1))
-        {
-            in_arc_points.push_back(arc_end_point1);
-        }
-        if(Tools::ifPointInsideConvexHull(points, arc_end_point2))
-        {
-            in_arc_points.push_back(arc_end_point2);
-        }
+        in_arc_points.push_back(arc_end_point1);
+
+        cout << " - 1 - " << arc_end_point1 << endl;
+    }
+    if(Tools::ifPointInsideConvexHull(points, arc_end_point2))
+    {
+        in_arc_points.push_back(arc_end_point2);
+
+        cout << " - 2 - " << arc_end_point2 << endl;
     }
 
 
@@ -291,8 +304,10 @@ VoronoiCell AlgVoronoi::getHalfPlane(Node &node1, Node &node2)
     {
     double dist = Tools::distance(node1.pos, node2.pos);
     double dist_sq = dist * dist;
-    double r1_sq = node1.currentRange(this->alg) * node1.currentRange(this->alg);
-    double r2_sq = node2.currentRange(this->alg) * node2.currentRange(this->alg);
+    double _r1 = node1.getInitialRange(this->alg);//node1.currentRange(this->alg);
+    double _r2 = node2.getInitialRange(this->alg);//node2.currentRange(this->alg);
+    double r1_sq =  _r1 * _r1;
+    double r2_sq =  _r2 * _r2;
 
     param = ((r1_sq - r2_sq) + dist_sq)/ (2 *dist_sq);
     }
@@ -477,13 +492,13 @@ void AlgVoronoi::halfPlaneIntersection(const VoronoiCell& v1, const VoronoiCell&
             break;
         }
 
-        if(left_c)
+        if(left_c == NULL)
         {
             //cout << endl << *left_c << " " << left_c<< endl;
-            //delete left_c;
+            delete left_c;
         }
-        if(right_c){
-            //delete right_c;
+        if(right_c == NULL){
+            delete right_c;
         }
     }
 

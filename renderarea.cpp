@@ -2,6 +2,7 @@
 
 #include "renderarea.h"
 #include "algvoronoi.h"
+#include "responsiblenodes.h"
 
 
 RenderArea::RenderArea(QWidget* parent)
@@ -73,8 +74,49 @@ void RenderArea::paintNode(QPainter *painter, QPaintEvent *event, const Node& no
 
 }
 
+
 void RenderArea::testPaint(QPainter* painter, QPaintEvent *event)
 {
+    /*
+    vector<Vector2f> hull;
+    hull.push_back(Vector2f(5000, 85.8009));
+    hull.push_back(Vector2f(869.824, 198.063));
+    hull.push_back(Vector2f(-5000, 2540.76));
+    hull.push_back(Vector2f(-5000, 5000));
+    hull.push_back(Vector2f(5000, 5000));
+    hull.push_back(Vector2f(5000, 85.8009));
+
+    cout << Tools::ifPointInsideConvexHull(hull, Vector2f(495.704, 439.816));
+
+    vector<Vector2f> hull1;
+    hull1.push_back(Vector2f(869.824, 198.063));
+    hull1.push_back(Vector2f(-5000, 357.61));
+    hull1.push_back(Vector2f(-5000, 5000));
+    hull1.push_back(Vector2f(5000, 5000));
+    hull1.push_back(Vector2f(5000, 2259.33));
+    hull1.push_back(Vector2f(869.824, 198.063));
+
+    cout << Tools::ifPointInsideConvexHull(hull1, Vector2f(495.704, 439.816));
+
+    painter->setPen(QPen(QBrush(Qt::blue), 8));
+    painter->setBrush(Qt::NoBrush);
+    for(int i = 0; i < hull.size(); i++)
+    {
+        painter->drawPoint(hull[i].x, hull[i].y);
+        if(i == hull.size() - 1) break;
+        painter->drawLine(hull[i].x, hull[i].y,hull[i+1].x, hull[i+1].y);
+    }
+    for(int i = 0; i < hull1.size(); i++)
+    {
+        painter->drawPoint(hull1[i].x, hull1[i].y);
+        if(i == hull1.size() - 1) break;
+        painter->drawLine(hull1[i].x, hull1[i].y,hull1[i+1].x, hull1[i+1].y);
+    }
+    painter->setPen(QPen(QBrush(Qt::green), 8));
+    painter->setBrush(Qt::NoBrush);
+    painter->drawPoint(495.704, 439.816);
+    */
+
     /*intersection segment-circle algorithm check
     Vector2f v1(100,100); Vector2f v2(400,400); Vector2f p(300,300);
     float r = 141.42;
@@ -101,35 +143,18 @@ void RenderArea::testPaint(QPainter* painter, QPaintEvent *event)
     //painter->drawLine(node.x, node.y, 200, 200);
 
     /*
-    Node node1(Vector2f(100, 120), Vector2f(100, 300));
-    Node node2(Vector2f(320, 450), Vector2f(400, 300));
-    Node node3(Vector2f(230, 780), Vector2f(600, 400));
-    Node node4(Vector2f(450, 550), Vector2f(950, 250));
-    Node node14(Vector2f(450, 560), Vector2f(150, 670));
-    Node node5(Vector2f(340, 302), Vector2f(50, 50));
-    Node node6(Vector2f(670, 340), Vector2f(300, 200));
-    Node node7(Vector2f(340, 032), Vector2f(150, 550));
-    Node node8(Vector2f(650, 430), Vector2f(250, 50));
-    Node node9(Vector2f(450, 340), Vector2f(850, 150));
-    Node node10(Vector2f(240, 230), Vector2f(900, 550));
+    Node node1(Vector2f(532.137, 556.44), Vector2f(532.137, 556.44));
+    Node node2( Vector2f(722.4, 241.859), Vector2f(722.4, 241.859));
+    Node node3( Vector2f(377.678, 497.529), Vector2f(377.678, 497.529));
     //node2.alg_range.insert(make_pair(VORONOI_PREV, vector<pair<float, float> >()));
     //node2.alg_range.find(VORONOI_PREV)->second.push_back(make_pair(0,350));
     vector<Node> nodes;
     nodes.push_back(node1);
     nodes.push_back(node2);
-
     nodes.push_back(node3);
-    nodes.push_back(node4);
-    nodes.push_back(node5);
-    nodes.push_back(node6);
-    nodes.push_back(node7);
-    nodes.push_back(node8);
-    nodes.push_back(node9);
-    nodes.push_back(node10);
-    //nodes.push_back(node14);
 
 
-    AlgVoronoi a;
+    AlgVoronoi a(VORONOI_PREV, ResponsibleNodes::getAllSmallerOrder,Qt::green, 180);
     a.voronoiDiagram(nodes);
 
 
@@ -161,6 +186,7 @@ void RenderArea::testPaint(QPainter* painter, QPaintEvent *event)
         }
     }
     */
+
 
 }
 

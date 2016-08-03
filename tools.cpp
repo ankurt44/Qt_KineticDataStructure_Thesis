@@ -1,6 +1,7 @@
 #include "tools.h"
 #include "constants.h"
 #include <math.h>
+#include <assert.h>
 
 
 double Tools::distance(const Vector2f& v1, const Vector2f& v2)
@@ -147,6 +148,8 @@ bool Tools::ifPointInsideConvexHull(const vector<Vector2f>& hull, const Vector2f
 
 Vector2f Tools::rotateAbout(const Vector2f& pivot, double angle_rad, const Vector2f& point)
 {
+    assert(angle_rad <= 2*PI && "method rotateAbout got angle in degree i guess");
+
     float s = sin(angle_rad);
     float c = cos(angle_rad);
 
@@ -191,18 +194,26 @@ float Tools::angleBetweenVectorsInDegree(const Vector2f& v1, const Vector2f& v2)
     double dot = Tools::dotProduct(v1, v2);
     double v1len = Tools::lengthOfVector(v1);
     double v2len = Tools::lengthOfVector(v2);
-    double angle = (double)dot/(v1len*v2len);
+    double angle = 0;
+    if(v1len == 0 || v2len == 0)
+        angle = 1;
+    else if(dot == 0)
+        angle = 0;
+    else
+        angle = (double)dot/(v1len*v2len);
 
     if(angle > 1) //temporary solution (angle becomes a little greater than 1 because of value precision)
     {
         double temp = angle - 1;
-        angle = angle - temp;
+        angle = 1;//angle - temp;
     }
-
+    if(angle < -1) //temporary solution (angle becomes a little greater than 1 because of value precision)
+    {
+        double temp = angle + 1;
+        angle = -1;//angle + temp;
+    }
     angle  = acos(angle) ;
     angle = angle * 180/PI;
-
-    //cout << angle << endl;
 
     return angle;
 }
@@ -214,7 +225,7 @@ bool Tools::inArc(const Vector2f& center, const Vector2f& mid_arc_point, float r
 
     float _angle = Tools::angleBetweenVectorsInDegree(point-center, mid_arc_point-center);
 
-    if(_angle >= -angle/2 && _angle <= angle/2)
+    if((-angle/2) <= _angle && _angle <= angle/2)
     {
         return true;
     }
