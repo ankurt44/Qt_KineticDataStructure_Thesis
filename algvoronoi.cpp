@@ -306,6 +306,7 @@ VoronoiCell AlgVoronoi::getHalfPlane(Node &node1, Node &node2)
     double dist_sq = dist * dist;
     double _r1 = node1.getInitialRange(this->alg);//node1.currentRange(this->alg);
     double _r2 = node2.getInitialRange(this->alg);//node2.currentRange(this->alg);
+    cout << _r1 << " -- " << _r2 << endl;
     double r1_sq =  _r1 * _r1;
     double r2_sq =  _r2 * _r2;
 

@@ -142,16 +142,19 @@ void RenderArea::testPaint(QPainter* painter, QPaintEvent *event)
     //painter->drawPoint(node.pos.x, node.pos.y);
     //painter->drawLine(node.x, node.y, 200, 200);
 
-    /*
-    Node node1(Vector2f(532.137, 556.44), Vector2f(532.137, 556.44));
-    Node node2( Vector2f(722.4, 241.859), Vector2f(722.4, 241.859));
-    Node node3( Vector2f(377.678, 497.529), Vector2f(377.678, 497.529));
+
+    Node node1(Vector2f(532.137, 556.44), Vector2f(500, 400));
+    Node node2( Vector2f(722.4, 241.859), Vector2f(300, 400));
+    Node node3( Vector2f(377.678, 497.529), Vector2f(250, 400));
+
+    node1.children.push_back(&node3);
+
     //node2.alg_range.insert(make_pair(VORONOI_PREV, vector<pair<float, float> >()));
     //node2.alg_range.find(VORONOI_PREV)->second.push_back(make_pair(0,350));
     vector<Node> nodes;
     nodes.push_back(node1);
     nodes.push_back(node2);
-    nodes.push_back(node3);
+    //nodes.push_back(node3);
 
 
     AlgVoronoi a(VORONOI_PREV, ResponsibleNodes::getAllSmallerOrder,Qt::green, 180);
@@ -174,7 +177,7 @@ void RenderArea::testPaint(QPainter* painter, QPaintEvent *event)
         VoronoiCell c1 = n.cell;
         for(auto it = c1.left.begin(); it != c1.left.end()-1; it++)
         {
-            painter->setPen(QPen(QBrush(Qt::green), 2));
+            painter->setPen(QPen(QBrush(Qt::green), 6));
             painter->setBrush(Qt::NoBrush);
             painter->drawLine(it->x, it->y, (it+1)->x, (it+1)->y);
         }
@@ -185,7 +188,7 @@ void RenderArea::testPaint(QPainter* painter, QPaintEvent *event)
             painter->drawLine(it->x, it->y, (it+1)->x, (it+1)->y);
         }
     }
-    */
+
 
 
 }
