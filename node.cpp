@@ -54,6 +54,8 @@ const Node* Node::getFarChild()
 
 float Node::getInitialRange(ALG_VARIANT _alg)
 {
+    cout << "REMEMBER : returning 0 from line 57 class node" << endl;
+    return 0;
     if(children.size() == 0)
         return 0;
 

@@ -39,12 +39,12 @@ void InputWidget::createInput(Input& input)
     input.nextRandomPosition = Tools::nextAvailablePosition;
 
     //add algorithms
-    input.algos.push_back(new AlgBroadcastInterpolate);
+    input.algos.push_back(new AlgBroadcastInterpolate("INTERPOLATED"));
     input.selected_alg = VORONOI_PREV;
-    input.algos.push_back(new AlgBroadcastDirect);
-    input.algos.push_back(new AlgVoronoi(VORONOI_PREV, ResponsibleNodes::getAllSmallerOrder,
+    input.algos.push_back(new AlgBroadcastDirect("DIRECT"));
+    input.algos.push_back(new AlgVoronoi(VORONOI_PREV, "LOWER_ORDER", ResponsibleNodes::getAllSmallerOrder,
                                          Qt::magenta, direction_factor));
-    input.algos.push_back(new AlgVoronoi(VORONOI_PREV_TWO, ResponsibleNodes::getTwoCloserNodes,//ResponsibleNodes::getAllSmallerOrder,
+    input.algos.push_back(new AlgVoronoi(VORONOI_PREV_TWO, "2_NEAREST", ResponsibleNodes::getTwoCloserNodes,//ResponsibleNodes::getAllSmallerOrder,
                                          Qt::green, direction_factor));
 }
 

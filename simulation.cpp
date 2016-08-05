@@ -24,8 +24,8 @@ void Simulation::connectSignalSlot()
     qRegisterMetaType<std::string>("string");
     //connect(this, SIGNAL(addGraph(GRAPHS,ALG_VARIANT,Qt::GlobalColor,string,QCPAxis*,QCPAxis*))
 
-    connect(this, SIGNAL(addGraph(GRAPHS, ALG_VARIANT, Qt::GlobalColor, string, QCPAxis*, QCPAxis*)),
-            graph_win, SLOT(addGraph(GRAPHS,ALG_VARIANT, Qt::GlobalColor, string, QCPAxis*, QCPAxis*)));
+    connect(this, SIGNAL(addGraph(GRAPHS, ALG_VARIANT, Qt::GlobalColor, string,string, QCPAxis*, QCPAxis*)),
+            graph_win, SLOT(addGraph(GRAPHS,ALG_VARIANT, Qt::GlobalColor, string,string, QCPAxis*, QCPAxis*)));
     connect(this, SIGNAL(addData(GRAPHS,ALG_VARIANT,double,double)),
             graph_win, SLOT(addGraphData(GRAPHS,ALG_VARIANT,double,double)));
 }
@@ -254,16 +254,16 @@ void Simulation::startDrawing()
     is_drawing = true;
     for(AlgModel* alg : input->algos)
     {
-        emit addGraph(MAX_RANGE, alg->alg, alg->graph_color, "energy (MAX)");
+        emit addGraph(MAX_RANGE, alg->alg, alg->graph_color, "energy (MAX)", alg->name);
         //emit setData(MAX_RANGE, alg->alg, );
     }
     for(AlgModel* alg : input->algos)
     {
-        emit addGraph(TOTAL_SUM_RANGE, alg->alg, alg->graph_color, "energy (TOTAL)");
+        emit addGraph(TOTAL_SUM_RANGE, alg->alg, alg->graph_color, "energy (TOTAL)", alg->name);
     }
     for(AlgModel* alg : input->algos)
     {
-        emit addGraph(AVG_RANGE, alg->alg, alg->graph_color, "energy (AVG)");
+        emit addGraph(AVG_RANGE, alg->alg, alg->graph_color, "energy (AVG)", alg->name);
     }
 }
 

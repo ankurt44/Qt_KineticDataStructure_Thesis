@@ -3,10 +3,11 @@
 #include "algbroadcastinterpolate.h"
 #include "node.h"
 
-AlgBroadcastInterpolate::AlgBroadcastInterpolate()
+AlgBroadcastInterpolate::AlgBroadcastInterpolate(string name)
 {
     alg = NORMAL_INTERPOLATION;
     graph_color = Qt::blue;
+    this->name = name;
 }
 
 void AlgBroadcastInterpolate::execute(vector<Node>& nodes, float m_interval_start, float m_interval_end, float m_passed_time)

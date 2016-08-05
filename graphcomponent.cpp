@@ -8,7 +8,7 @@ GraphComponent::GraphComponent(QWidget *parent)
 
 }
 
-void GraphComponent::addGraph(ALG_VARIANT _alg, Qt::GlobalColor color, string vAxis, QCPAxis *keyAxis, QCPAxis *valueAxis)
+void GraphComponent::addGraph(ALG_VARIANT _alg, Qt::GlobalColor color, string vAxis, QCPAxis *keyAxis, QCPAxis *valueAxis, string name)
 {
     if(graphs.find(_alg) != graphs.end())
     {
@@ -21,7 +21,14 @@ void GraphComponent::addGraph(ALG_VARIANT _alg, Qt::GlobalColor color, string vA
     QCustomPlot::yAxis->setLabel(QString::fromStdString(vAxis));
     graphs.find(_alg)->second->setPen(QPen(color));
     graphs.find(_alg)->second->setLineStyle(QCPGraph::lsLine);
+    graphs.find(_alg)->second->setName(QString::fromStdString(name));
     //graphs.find(_alg)->second->setScatterStyle(QCPScatterStyle::ssDisc);
+    QCustomPlot::legend->setVisible(true);
+    QFont legendFont = font();
+    legendFont.setPointSize(6);
+    QCustomPlot::legend->setFont(legendFont);
+    QCustomPlot::legend->setSelectedFont(legendFont);
+    QCustomPlot::legend->setMaximumSize(40,40);
 }
 
 void GraphComponent::setGraphData(ALG_VARIANT _alg, QVector<double> key, QVector<double> value)
@@ -42,7 +49,7 @@ void GraphComponent::addGraphData(ALG_VARIANT _alg, double key, double value)
     if(it != graphs.end())
     {
         it->second->addData(key, value);
-        graphs[_alg]->rescaleValueAxis(true);
+        graphs.find(_alg)->second->rescaleValueAxis(true);
         //QCustomPlot::yAxis->setRange(value+2,500 ,Qt::AlignTop);
         QCustomPlot::xAxis->setRange(key+1 ,20 ,Qt::AlignRight);
         QCustomPlot::replot();

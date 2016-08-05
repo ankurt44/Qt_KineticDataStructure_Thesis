@@ -7,7 +7,7 @@ class AlgVoronoi : public AlgModel
 {
 public:
 
-    AlgVoronoi(ALG_VARIANT _alg,
+    AlgVoronoi(ALG_VARIANT _alg, string name,
                 vector<int> (*getResponsibleNodes)(const vector<Node>& _nodes, int _curr_node)
                     ,Qt::GlobalColor graph_color ,float _direction_factor =360);
 
@@ -39,6 +39,8 @@ private:
     float time_gap;
 
     float direction_factor;
+
+    vector<Vector2f> boundary_vertices;
 };
 
 

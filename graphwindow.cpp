@@ -57,11 +57,11 @@ GraphWindow::~GraphWindow()
 
 }
 
-void GraphWindow::addGraph(GRAPHS graph, ALG_VARIANT _alg, Qt::GlobalColor color, string vAxis, QCPAxis *keyAxis, QCPAxis *valueAxis)
+void GraphWindow::addGraph(GRAPHS graph, ALG_VARIANT _alg, Qt::GlobalColor color, string vAxis, string name, QCPAxis *keyAxis, QCPAxis *valueAxis)
 {
     if(checkIfGraphExist(graph))
     {
-        graph_components.find(graph)->second->addGraph(_alg, color, vAxis, keyAxis, valueAxis);
+        graph_components.find(graph)->second->addGraph(_alg, color, vAxis, keyAxis, valueAxis, name);
         return;
     }
     graph_components.insert(std::make_pair(graph, new GraphComponent()));

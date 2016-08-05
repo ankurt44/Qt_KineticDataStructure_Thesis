@@ -2,10 +2,11 @@
 #include "alg.h"
 #include "algbroadcastdirect.h"
 
-AlgBroadcastDirect::AlgBroadcastDirect()
+AlgBroadcastDirect::AlgBroadcastDirect(string name)
 {
     alg = DIRECT_RANGE_ASSIGN;
     graph_color = Qt::red;
+    this->name = name;
 }
 
 void AlgBroadcastDirect::execute(vector<Node> &nodes, float m_interval_start, float m_interval_end, float m_passed_time)

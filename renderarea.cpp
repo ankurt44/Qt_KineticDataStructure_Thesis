@@ -157,7 +157,7 @@ void RenderArea::testPaint(QPainter* painter, QPaintEvent *event)
     //nodes.push_back(node3);
 
 
-    AlgVoronoi a(VORONOI_PREV, ResponsibleNodes::getAllSmallerOrder,Qt::green, 180);
+    AlgVoronoi a(VORONOI_PREV, "LOWER_ORDER", ResponsibleNodes::getAllSmallerOrder,Qt::green, 180);
     a.voronoiDiagram(nodes);
 
 
