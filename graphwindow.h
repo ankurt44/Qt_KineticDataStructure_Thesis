@@ -16,7 +16,7 @@ public:
     ~GraphWindow();
 
 public slots:
-    void addGraph(GRAPHS graph, ALG_VARIANT alg, Qt::GlobalColor = Qt::blue, string vAxis = "energy"
+    void addGraph(GRAPHS graph, ALG_VARIANT alg, Qt::GlobalColor = Qt::blue, Qt::PenStyle linestyle = Qt::SolidLine, string vAxis = "energy"
             , string name = "Graph", QCPAxis *keyAxis = 0, QCPAxis *valueAxis = 0);
     void removeGraph(GRAPHS graph, ALG_VARIANT _alg);
     void addGraphData(GRAPHS graph, ALG_VARIANT _alg, double key, double value);

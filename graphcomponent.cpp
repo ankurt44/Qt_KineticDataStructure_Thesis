@@ -8,7 +8,8 @@ GraphComponent::GraphComponent(QWidget *parent)
 
 }
 
-void GraphComponent::addGraph(ALG_VARIANT _alg, Qt::GlobalColor color, string vAxis, QCPAxis *keyAxis, QCPAxis *valueAxis, string name)
+void GraphComponent::addGraph(ALG_VARIANT _alg, Qt::GlobalColor color, Qt::PenStyle linestyle, string vAxis,
+                              QCPAxis *keyAxis, QCPAxis *valueAxis, string name)
 {
     if(graphs.find(_alg) != graphs.end())
     {
@@ -19,8 +20,12 @@ void GraphComponent::addGraph(ALG_VARIANT _alg, Qt::GlobalColor color, string vA
     graphs.insert(std::make_pair(_alg, QCustomPlot::addGraph(keyAxis, valueAxis)));
     QCustomPlot::xAxis->setLabel("time");
     QCustomPlot::yAxis->setLabel(QString::fromStdString(vAxis));
-    graphs.find(_alg)->second->setPen(QPen(color));
-    graphs.find(_alg)->second->setLineStyle(QCPGraph::lsLine);
+
+    QPen pen;
+    pen.setColor(color);
+    pen.setStyle(linestyle);
+    graphs.find(_alg)->second->setPen(pen);
+    //graphs.find(_alg)->second->setLineStyle(QCPGraph::lsLine);
     graphs.find(_alg)->second->setName(QString::fromStdString(name));
     //graphs.find(_alg)->second->setScatterStyle(QCPScatterStyle::ssDisc);
     QCustomPlot::legend->setVisible(true);
@@ -51,7 +56,7 @@ void GraphComponent::addGraphData(ALG_VARIANT _alg, double key, double value)
         it->second->addData(key, value);
         graphs.find(_alg)->second->rescaleValueAxis(true);
         //QCustomPlot::yAxis->setRange(value+2,500 ,Qt::AlignTop);
-        QCustomPlot::xAxis->setRange(key+1 ,20 ,Qt::AlignRight);
+        QCustomPlot::xAxis->setRange(key+1 ,30 ,Qt::AlignRight);
         QCustomPlot::replot();
     }
 }

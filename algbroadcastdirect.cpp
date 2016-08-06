@@ -2,10 +2,11 @@
 #include "alg.h"
 #include "algbroadcastdirect.h"
 
-AlgBroadcastDirect::AlgBroadcastDirect(string name)
+AlgBroadcastDirect::AlgBroadcastDirect(string name, Qt::PenStyle linestyle)
 {
     alg = DIRECT_RANGE_ASSIGN;
     graph_color = Qt::red;
+    this->linestyle = linestyle;
     this->name = name;
 }
 

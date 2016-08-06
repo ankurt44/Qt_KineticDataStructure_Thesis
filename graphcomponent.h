@@ -12,7 +12,7 @@ class GraphComponent : public QCustomPlot
 {
 public:
     GraphComponent(QWidget* parent = 0);
-    void addGraph(ALG_VARIANT alg, Qt::GlobalColor = Qt::blue, string vAxis = "energy",
+    void addGraph(ALG_VARIANT alg, Qt::GlobalColor = Qt::blue, Qt::PenStyle linestyle = Qt::SolidLine, string vAxis = "energy",
                   QCPAxis *keyAxis = 0, QCPAxis *valueAxis = 0, string name = "Graph");
     void removeGraph(ALG_VARIANT _alg);
     void addGraphData(ALG_VARIANT _alg, double key, double value);

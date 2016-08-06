@@ -3,10 +3,11 @@
 #include "algbroadcastinterpolate.h"
 #include "node.h"
 
-AlgBroadcastInterpolate::AlgBroadcastInterpolate(string name)
+AlgBroadcastInterpolate::AlgBroadcastInterpolate(string name, Qt::PenStyle linestyle)
 {
     alg = NORMAL_INTERPOLATION;
     graph_color = Qt::blue;
+    this->linestyle = linestyle;
     this->name = name;
 }
 

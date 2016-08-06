@@ -1,11 +1,12 @@
 #include<assert.h>
 #include "algvoronoi.h"
 
-AlgVoronoi::AlgVoronoi(ALG_VARIANT _alg, string name, vector<int> (*getResponsibleNodes)(const vector<Node> &, int),
+AlgVoronoi::AlgVoronoi(ALG_VARIANT _alg, string name, Qt::PenStyle linestyle, vector<int> (*getResponsibleNodes)(const vector<Node> &, int),
                        Qt::GlobalColor graph_color, float _direction_factor)
 {
     alg = _alg;
     this->graph_color = graph_color;
+    this->linestyle = linestyle;
     time_gap = 15;
     direction_factor = _direction_factor;
     this->getResponsibleNodes = getResponsibleNodes;
@@ -28,7 +29,7 @@ void AlgVoronoi::execute(vector<Node>& nodes, float m_interval_start, float m_in
     float interval = (m_interval_end - m_interval_start)/1000;
     float increment = interval/time_gap;
 
-    cout << "started voronoi algorithm" <<endl;
+    //cout << "started voronoi algorithm" <<endl;
     for(int i = 0; i < nodes.size(); i++)
     {
         if(nodes[i].order == 0)
@@ -39,12 +40,12 @@ void AlgVoronoi::execute(vector<Node>& nodes, float m_interval_start, float m_in
         for(int r : resp_nodes_i)
             resp_nodes.push_back(nodes[r]);
 
-        if(resp_nodes_i.size() > 1)
-            cout << endl;
+        //if(resp_nodes_i.size() > 1)
+        //    cout << endl;
 
         voronoiDiagram(resp_nodes);
 
-        cout << "processing " << nodes[i].pos << endl;
+        //cout << "processing " << i << " - " << nodes[i].pos << endl;
         for(int r = 0; r < resp_nodes.size(); r++)
         {
             //cout << "resp node " << resp_nodes_i[r] << " and pos " << resp_nodes[r].pos << endl;
@@ -79,11 +80,11 @@ void AlgVoronoi::execute(vector<Node>& nodes, float m_interval_start, float m_in
         }
         resp_nodes.clear();
         resp_nodes_i.clear();
-        cout << endl << endl;
+        //cout << endl << endl;
 
     }
 
-    cout << "interpolation voronoi algorithm" <<endl;
+    //cout << "interpolation voronoi algorithm" <<endl;
     for(int i = 0; i < nodes.size(); i++)
     {
         vector<pair<float, float> > interpolation;
@@ -105,7 +106,7 @@ void AlgVoronoi::execute(vector<Node>& nodes, float m_interval_start, float m_in
         nodes[i].addInterpolation(this->alg, interpolation);
     }
 
-    cout << "done voronoi algorithm" <<endl;
+    //cout << "done voronoi algorithm" <<endl;
 }
 
 bool comp(float a, float b){return a < b;}
@@ -122,13 +123,9 @@ vector<Vector2f> AlgVoronoi::getPointsInCircle(const Vector2f& point, const Voro
 
     vector<Vector2f> in_circle_points;
 
-    //1 if the circle remains inside the cell
-    //  the range is the distance from the tangent point on circle
-    //  only applies for the cell containing the tangent_point at any time....
-    //  if the cell doesnt contain the center-> then it can never contain the tangent point as it goes farther from cell with t
-    float d_ = Tools::distance(point, center) + radius; //used to get the tangent point on circle
-                                                        //in the direction of line connecting
-                                                        //point and center
+
+    float d_ = Tools::distance(point, center) + radius;
+
     Vector2f tangent_point = Tools::pointOnLineSegmentInGivenDirection(point, center, d_);
 
     if(Tools::ifPointInsideConvexHull(points, tangent_point))
@@ -286,14 +283,11 @@ void AlgVoronoi::voronoiDiagram(vector<Node>& nodes)
             if(j == i)
                 continue;
 
-            cout << i << " - " << j << endl;
             halfPlanes.push_back(AlgVoronoi::getHalfPlane(nodes[i], nodes[j]));
         }
         VoronoiCell* cell = NULL;
 
-        cout << "a" << endl;
         AlgVoronoi::halfPlaneIntersection(halfPlanes, cell);
-        cout << "b" << endl;
 
         assert(cell != NULL && " no voronoi cell assigned");
         halfPlanes.clear();
@@ -392,7 +386,6 @@ VoronoiCell AlgVoronoi::getHalfPlane(Node &node1, Node &node2)
 //ToDo : check if Node::pos works fine here, or it needs to be Node::pos_at_ti
 VoronoiCell AlgVoronoi::getHalfPlane(Node &node1, Node &node2)
 {
-    cout << "debug msg " << endl;
     //find point on line segment node1-node2
     //
     //dist of point is dist*param from node1, and (1-param)*dist from node2
@@ -455,8 +448,6 @@ VoronoiCell AlgVoronoi::getHalfPlane(Node &node1, Node &node2)
     VoronoiCell res = *cell;
     if(cell)
         delete cell;
-
-    cout << "another debug msg " << endl;
 
     return res;
 

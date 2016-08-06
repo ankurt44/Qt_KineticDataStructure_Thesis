@@ -13,6 +13,7 @@ public:
     ALG_VARIANT alg;
     string name;
     Qt::GlobalColor graph_color;
+    Qt::PenStyle linestyle;
 };
 
 #endif // ALGMODEL

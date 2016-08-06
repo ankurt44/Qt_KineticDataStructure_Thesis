@@ -157,13 +157,12 @@ void RenderArea::testPaint(QPainter* painter, QPaintEvent *event)
     //nodes.push_back(node3);
 
 
-    AlgVoronoi a(VORONOI_PREV, "LOWER_ORDER", ResponsibleNodes::getAllSmallerOrder,Qt::green, 180);
+    AlgVoronoi a(VORONOI_PREV, "LOWER_ORDER", Qt::DashLine, ResponsibleNodes::getAllSmallerOrder,Qt::green, 180);
     a.voronoiDiagram(nodes);
 
 
     for(Node n : nodes)
     {
-
         painter->setPen(QPen(QBrush(Qt::red), 4));
         painter->setBrush(QBrush(Qt::red));
         painter->drawPoint(n.pos.x, n.pos.y);

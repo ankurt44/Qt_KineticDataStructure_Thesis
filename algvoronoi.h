@@ -7,7 +7,7 @@ class AlgVoronoi : public AlgModel
 {
 public:
 
-    AlgVoronoi(ALG_VARIANT _alg, string name,
+    AlgVoronoi(ALG_VARIANT _alg, string name, Qt::PenStyle linestyle,
                 vector<int> (*getResponsibleNodes)(const vector<Node>& _nodes, int _curr_node)
                     ,Qt::GlobalColor graph_color ,float _direction_factor =360);
 
