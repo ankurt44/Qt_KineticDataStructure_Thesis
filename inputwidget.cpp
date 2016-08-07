@@ -22,6 +22,7 @@ void InputWidget::createInput(Input& input)
     float interval_length = txt_interval->text().toInt();
     float velocity_max = txt_velocity->text().toInt();
     float direction_factor = txt_direction->text().toInt();
+    cout << num << "-" << interval_length << "-" << velocity_max << "-" <<direction_factor << endl;
 
     vector<Node>* nodes = new vector<Node>;
     nodes->reserve(num);

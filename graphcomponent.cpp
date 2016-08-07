@@ -30,7 +30,8 @@ void GraphComponent::addGraph(ALG_VARIANT _alg, Qt::GlobalColor color, Qt::PenSt
     //graphs.find(_alg)->second->setScatterStyle(QCPScatterStyle::ssDisc);
     QCustomPlot::legend->setVisible(true);
     QFont legendFont = font();
-    legendFont.setPointSize(6);
+    legendFont.setBold(true);
+    legendFont.setPointSize(10);
     QCustomPlot::legend->setFont(legendFont);
     QCustomPlot::legend->setSelectedFont(legendFont);
     QCustomPlot::legend->setMaximumSize(40,40);

@@ -7,7 +7,7 @@ AlgVoronoi::AlgVoronoi(ALG_VARIANT _alg, string name, Qt::PenStyle linestyle, ve
     alg = _alg;
     this->graph_color = graph_color;
     this->linestyle = linestyle;
-    time_gap = 15;
+    time_gap = 20;
     direction_factor = _direction_factor;
     this->getResponsibleNodes = getResponsibleNodes;
     this->name = name;
@@ -93,13 +93,21 @@ void AlgVoronoi::execute(vector<Node>& nodes, float m_interval_start, float m_in
         {
             vector<float> rs = time_ranges[t];
 
+            float range = 0;
             if(rs.size() == 0)
             {
-                interpolation.push_back(make_pair(t, 0));
-                continue;       //ToDO : check if continue required
+                range = 0;
+            }else
+            {
+                range = *std::max_element(rs.begin(), rs.end(), comp);
             }
 
-            float range = *std::max_element(rs.begin(), rs.end(), comp);
+            if(interpolation.size()>0 && interpolation[interpolation.size()-1].second > range)
+            {
+                range = interpolation[interpolation.size()-1].second;
+                cout << "happens, omg" << endl;
+            }
+
             interpolation.push_back(make_pair(t,range));
         }
 

@@ -43,7 +43,7 @@ void Simulation::start()
     while(is_running)
     {
         interval_elapsed = 0.0;
-        cout << "next interval" << endl;
+
         for(Node& n : input->nodes)
         {
             input->nextRandomPosition(n.pos_at_ti, n.pos_at_ti1, input->direction_factor, n.velocity,

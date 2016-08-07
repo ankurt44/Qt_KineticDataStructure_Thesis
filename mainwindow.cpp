@@ -17,8 +17,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    srand(100);
-    //srand(time(0));
+    //srand(100);
+    srand(time(0));
 
     createUI();
     appearance();
@@ -58,8 +58,6 @@ void MainWindow::start()
     connectSignalSlot();
 
     thread->start();
-
-    //ToDo : enable and disable controls
 
 }
 
